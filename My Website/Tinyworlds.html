@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Chloe’s Tiny Worlds 🌸</title>
+  <style>
+    body {
+      background: #fff5ee; /* soft cream */
+      color: #4b3621;      /* brownish text for cozy vibe */
+      font-family: "Courier New", monospace;
+      margin: 0;
+      padding: 2em;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 2rem;
+      color: #d87c7c;
+      text-shadow: 0 0 4px #ffdede;
+      margin-bottom: 1em;
+    }
+
+    button {
+      padding: 0.6em 1.2em;
+      font-family: monospace;
+      font-size: 1rem;
+      border: 2px solid #d87c7c;
+      border-radius: 10px;
+      background: #fff0f0;
+      color: #d87c7c;
+      cursor: pointer;
+      font-weight: bold;
+      margin-bottom: 2em;
+      transition: all 0.3s;
+    }
+
+    button:hover {
+      background: #d87c7c;
+      color: #fff5ee;
+      box-shadow: 0 0 8px #ffb3b3;
+    }
+
+    #worldContainer {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.5em;
+    }
+
+    .world {
+      background: #fff0f5;
+      border: 2px solid #d87c7c;
+      border-radius: 15px;
+      padding: 1em 2em;
+      width: 300px;
+      text-align: center;
+      box-shadow: 0 0 10px #ffcccc inset, 0 0 10px #d87c7c;
+      transition: transform 0.3s, opacity 0.5s;
+      opacity: 0;
+    }
+
+    .world:hover {
+      transform: scale(1.05);
+    }
+
+    .world img {
+      width: 80px;
+      height: 80px;
+      margin-bottom: 0.5em;
+      border-radius: 50%;
+      border: 2px solid #d87c7c;
+      box-shadow: 0 0 8px #ffdede, 0 0 15px #d87c7c;
+      animation: float 3s ease-in-out infinite alternate;
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(-10px); }
+    }
+
+    .world h3 {
+      margin: 0.3em 0;
+      color: #b05555;
+    }
+
+
+#nav {
+  margin-bottom: 1.5em;
+}
+
+#nav a {
+  display: inline-block;
+  margin: 0.3em 0.5em;
+  padding: 0.4em 1em;
+  border: 1px solid #d87c7c;
+  border-radius: 8px;
+  background: #fff0f0;
+  color: #d87c7c;
+  text-decoration: none;
+  font-weight: bold;
+  transition: all 0.3s;
+}
+
+#nav a:hover {
+  background: #d87c7c;
+  color: #fff5ee;
+  box-shadow: 0 0 6px #ffb3b3, 0 0 12px #ffdede;
+}
+
+    .world p {
+      font-size: 0.9rem;
+      margin: 0;
+      color: #6b4b3d;
+    }
+  </style>
+</head>
+<body>
+  <h1>🌸 Chloe’s Tiny Worlds 🌸</h1>
+  <button id="generateWorld">Discover a Tiny World</button>
+
+  <div id="worldContainer"></div>
+<div id="nav">
+  <a href="index.html">Home</a>
+  <a href="aboutmepage.html">About Me</a>
+  <a href="sparklepage.html">My Thoughts</a>
+  <a href="Chat.html">Chat</a>
+  <a href="catchgame.html">Catch Game</a>
+  <a href="ambient.html">Ambient glow</a>
+  <a href="flappy.html">Flappy Circle</a>
+
+</div>
+
+  <script>
+    const worlds = [
+      { 
+        title: "Enchanted Forest", 
+        desc: "A quiet forest with glowing mushrooms and floating lanterns.",
+        img: "https://tse3.mm.bing.net/th/id/OIP.Nx43XofLmd28-1KU_ISYnwHaHa?cb=ucfimg2&ucfimg=1&rs=1&pid=ImgDetMain&o=7&rm=3"
+      },
+      { 
+        title: "Cozy Library", 
+        desc: "Shelves filled with ancient books and soft sunlight spilling in.",
+        img: "https://tse4.mm.bing.net/th/id/OIP.TDx_7PNyWttUSL4bb-6dmwHaHa?cb=ucfimg2&ucfimg=1&rs=1&pid=ImgDetMain&o=7&rm=3"
+      },
+      { 
+        title: "Mini Ocean", 
+        desc: "Tiny waves lap at a sandy shore, with seashells scattered around.",
+        img: "https://i.pinimg.com/736x/44/61/80/446180c0d2a8bd0cebc5bca6f24458b9.jpg"
+      },
+      { 
+        title: "Floating Island", 
+        desc: "A small island hovers in the clouds with a single tree.",
+        img: "https://tse3.mm.bing.net/th/id/OIP.slG0vb2-5ikzJKpLsuyh6QHaE7?cb=ucfimg2&ucfimg=1&rs=1&pid=ImgDetMain&o=7&rm=3"
+      },
+      { 
+        title: "Secret Garden", 
+        desc: "Flowers bloom in impossible colors, bees buzzing softly.",
+        img: "https://i.pinimg.com/originals/ba/c5/5c/bac55cc70afb63a30eb4ceb39b17a0d4.jpg"
+      },
+      { 
+        title: "Moonlit Cottage", 
+        desc: "A tiny cottage under the silver glow of the moon, smoke curling from the chimney.",
+        img: "https://thumbs.dreamstime.com/b/serene-night-lake-glowing-cottage-under-full-moon-quaint-nestled-tranquil-illuminated-softly-luminous-surrounded-331668787.jpg"
+      },
+      { 
+        title: "Misty Lake", 
+        desc: "A calm lake shrouded in morning mist, reflecting pink skies.",
+        img: "https://i.etsystatic.com/42843947/r/il/1fe622/5060443481/il_794xN.5060443481_et9g.jpg"
+      }
+    ];
+
+    const button = document.getElementById("generateWorld");
+    const container = document.getElementById("worldContainer");
+
+    button.addEventListener("click", () => {
+      const existingWorld = container.querySelector(".world");
+      const randomWorld = worlds[Math.floor(Math.random() * worlds.length)];
+
+      const div = document.createElement("div");
+      div.classList.add("world");
+      div.innerHTML = `
+        <img src="${randomWorld.img}" alt="${randomWorld.title}">
+        <h3>${randomWorld.title}</h3>
+        <p>${randomWorld.desc}</p>
+      `;
+
+      container.appendChild(div);
+
+      if (existingWorld) {
+        // Fade out old world
+        existingWorld.style.opacity = 0;
+
+        setTimeout(() => {
+          existingWorld.remove();
+          div.style.opacity = 1; // Fade in new world
+        }, 500);
+      } else {
+        div.style.opacity = 1;
+      }
+
+      div.scrollIntoView({ behavior: "smooth" });
+    });
+  </script>
+</body>
+</html>

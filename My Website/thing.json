@@ -1,0 +1,17 @@
+{
+  "messages": {},
+  "users": {
+    "Chloe": {
+      "password": "cholera",
+      "color": "#ff66aa"
+    },
+    "Mckenna": {
+      "password": "microwave",
+      "color": "#66ccff"
+    },
+    "Krishivaa": {
+      "password": "mr.maker",
+      "color": "#ffffff"
+    }
+  }
+}
