@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Cosmic Soundscape 🌌</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+      font-family: monospace;
+      background: black;
+    }
+
+    /* Animated nebula background */
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle at 30% 30%, #00ffaa33, transparent 70%),
+                  radial-gradient(circle at 70% 60%, #33bbff44, transparent 70%),
+                  radial-gradient(circle at 40% 80%, #00ffbb33, transparent 70%),
+                  #000814;
+      animation: drift 30s infinite linear;
+      z-index: -1;
+      filter: blur(80px);
+    }
+
+    @keyframes drift {
+      0% { transform: translate(0,0) scale(1); }
+      50% { transform: translate(-20%, -10%) scale(1.2); }
+      100% { transform: translate(0,0) scale(1); }
+    }
+
+    /* Page layout */
+    .container {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 25px;
+      text-align: center;
+      color: #ccffdd;
+    }
+
+    h1 {
+      font-size: 2.2em;
+      letter-spacing: 2px;
+      text-shadow: 0 0 10px #00ffaa;
+    }
+
+    /* Sound buttons */
+    .sound-btn {
+      padding: 14px 32px;
+      background: rgba(0, 255, 180, 0.15);
+      border: 2px solid #33ffaa;
+      border-radius: 10px;
+      color: #e8fff5;
+      font-size: 1.1em;
+      cursor: pointer;
+      transition: 0.25s;
+      text-shadow: 0 0 8px #33ffaa;
+      backdrop-filter: blur(3px);
+    }
+
+    .sound-btn:hover {
+      background: rgba(0, 255, 200, 0.35);
+      transform: scale(1.08);
+      box-shadow: 0 0 25px #22ffaa88;
+    }
+
+    /* Back button */
+    #backBtn {
+      position: fixed;
+      top: 15px;
+      right: 15px;
+      padding: 0.5em 1em;
+      background: rgba(255,255,255,0.15);
+      border: 2px solid #aaffee;
+      color: #ccfff0;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: 0.2s;
+      z-index: 10;
+    }
+
+    #backBtn:hover {
+      background: rgba(255,255,255,0.5);
+      color: black;
+    }
+  </style>
+</head>
+<body>
+
+<a id="backBtn" href="gamesmenu.html">Back to Menu</a>
+
+<div class="container">
+  <h1>Cosmic Soundscape 🌌</h1>
+
+  <!-- Sound buttons -->
+  <button class="sound-btn" onclick="toggleSound('cosmicHum')">Cosmic Hum</button>
+  <button class="sound-btn" onclick="toggleSound('nebulaWind')">Nebula Wind</button>
+  <button class="sound-btn" onclick="toggleSound('stardustChimes')">Stardust Chimes</button>
+  <button class="sound-btn" onclick="toggleSound('deepForestNight')">Deep Forest Night</button>
+  <button class="sound-btn" onclick="toggleSound('waterEcho')">Water Echo</button>
+</div>
+
+<!-- AUDIO FILES (royalty-free-like placeholders) -->
+<audio id="cosmicHum" loop>
+  <source src="https://cdn.jsdelivr.net/gh/jefbeth/audio-examples/cosmic-hum.mp3">
+</audio>
+
+<audio id="nebulaWind" loop>
+  <source src="https://cdn.jsdelivr.net/gh/jefbeth/audio-examples/wind-dark.mp3">
+</audio>
+
+<audio id="stardustChimes" loop>
+  <source src="https://cdn.jsdelivr.net/gh/jefbeth/audio-examples/chimes-soft.mp3">
+</audio>
+
+<audio id="deepForestNight" loop>
+  <source src="https://cdn.jsdelivr.net/gh/jefbeth/audio-examples/forest-night.mp3">
+</audio>
+
+<audio id="waterEcho" loop>
+  <source src="https://cdn.jsdelivr.net/gh/jefbeth/audio-examples/water-soft.mp3">
+</audio>
+
+
+<script>
+function toggleSound(id) {
+  let audio = document.getElementById(id);
+
+  if (audio.paused) {
+    audio.volume = 0.6;
+    audio.play();
+  } else {
+    audio.pause();
+  }
+}
+</script>
+
+</body>
+</html>
