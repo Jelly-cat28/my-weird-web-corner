@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Interactive Night Sky 🌌✨</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      height: 100%;
+      width: 100%;
+      background: #0a0a20;
+      font-family: monospace;
+    }
+    canvas { display: block; }
+  </style>
+</head>
+<body>
+<canvas id="ambientCanvas"></canvas>
+
+<script>
+const canvas = document.getElementById("ambientCanvas");
+const ctx = canvas.getContext("2d");
+
+function resizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+resizeCanvas();
+window.addEventListener("resize", resizeCanvas);
+
+// Mouse tracking
+let mouse = { x: canvas.width/2, y: canvas.height/2 };
+window.addEventListener("mousemove", e => { mouse.x = e.clientX; mouse.y = e.clientY; });
+
+// Clouds
+const clouds = [];
+for (let i=0; i<12; i++) {
+  clouds.push({
+    x: Math.random()*canvas.width,
+    y: Math.random()*150,
+    r: 60+Math.random()*80,
+    speed: 0.3 + Math.random()*0.5,
+    alpha: 0.3 + Math.random()*0.4
+  });
+}
+
+// Fireflies
+const fireflies = [];
+for (let i=0; i<50; i++) {
+  fireflies.push({
+    x: Math.random()*canvas.width,
+    y: Math.random()*canvas.height,
+    r: 3+Math.random()*3,
+    speed: 3+Math.random()*3,
+    brightness: 0.5 + Math.random()*0.5
+  });
+}
+
+// Stars
+const stars = [];
+for (let i=0; i<100; i++) {
+  stars.push({
+    x: Math.random()*canvas.width,
+    y: Math.random()*canvas.height/2,
+    r: 1 + Math.random()*2,
+    brightness: 0.5 + Math.random()*0.5
+  });
+}
+
+// Plants (more numerous)
+const plants = [];
+for (let i=0; i<25; i++) {
+  plants.push({
+    x: Math.random()*canvas.width,
+    y: canvas.height - 10,
+    height: 50 + Math.random()*50,
+    leafCount: 2 + Math.floor(Math.random()*3),
+    brightness: 0.5 + Math.random()*0.5
+  });
+}
+
+// Draw glowing circle
+function drawGlowCircle(x,y,r,color,alpha=1){
+  let grad = ctx.createRadialGradient(x,y,r*0.2,x,y,r);
+  grad.addColorStop(0,"white");
+  grad.addColorStop(1,color);
+  ctx.globalAlpha = alpha;
+  ctx.fillStyle = grad;
+  ctx.beginPath();
+  ctx.arc(x,y,r,0,Math.PI*2);
+  ctx.fill();
+  ctx.globalAlpha = 1;
+}
+
+// Draw a plant
+function drawPlant(p) {
+  ctx.strokeStyle = `rgba(0,255,0,${p.brightness})`;
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  ctx.moveTo(p.x, p.y);
+  ctx.lineTo(p.x, p.y - p.height);
+  ctx.stroke();
+
+  for(let i=0;i<p.leafCount;i++){
+    let lx = p.x + (Math.random()-0.5)*10;
+    let ly = p.y - p.height*(i+1)/(p.leafCount+1);
+    drawGlowCircle(lx, ly, 6, "#77ff77", p.brightness);
+  }
+
+  // gently pulsate
+  p.brightness += (Math.random()-0.5)*0.05;
+  if(p.brightness<0.4) p.brightness=0.4;
+  if(p.brightness>1) p.brightness=1;
+}
+
+// Keyboard Easter egg: pressing any key spawns a small sparkle
+const sparkles = [];
+window.addEventListener("keydown", e => {
+  for(let i=0;i<5;i++){
+    sparkles.push({
+      x: Math.random()*canvas.width,
+      y: Math.random()*canvas.height,
+      r: 2 + Math.random()*3,
+      dx: (Math.random()-0.5)*2,
+      dy: (Math.random()-0.5)*2,
+      brightness: 0.5 + Math.random()*0.5,
+      ttl: 50 + Math.random()*50
+    });
+  }
+});
+
+// Animate
+function animate(){
+  ctx.fillStyle = "#0a0a20";
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+
+  // Stars
+  stars.forEach(s=>{
+    ctx.globalAlpha = s.brightness;
+    ctx.fillStyle = "white";
+    ctx.beginPath();
+    ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+    ctx.fill();
+    s.brightness += (Math.random()-0.5)*0.05;
+    if(s.brightness<0.4) s.brightness=0.4;
+    if(s.brightness>1) s.brightness=1;
+  });
+  ctx.globalAlpha = 1;
+
+  // Clouds (repel from mouse)
+  clouds.forEach(c=>{
+    ctx.fillStyle = `rgba(255,255,255,${c.alpha})`;
+    ctx.beginPath();
+    ctx.arc(c.x,c.y,c.r,0,Math.PI*2);
+    ctx.fill();
+
+    let dx = c.x - mouse.x;
+    let dy = c.y - mouse.y;
+    let dist = Math.sqrt(dx*dx + dy*dy);
+    if(dist < 150){ // repel radius
+      c.x += dx/dist * 2;
+      c.y += dy/dist * 1;
+    } else {
+      c.x += c.speed;
+    }
+    if(c.x - c.r > canvas.width) c.x = -c.r;
+    if(c.y - c.r < 0) c.y = c.r;
+    if(c.y + c.r > 200) c.y = 200;
+  });
+
+  // Fireflies
+  fireflies.forEach(f=>{
+    let dx = mouse.x - f.x;
+    let dy = mouse.y - f.y;
+    let dist = Math.sqrt(dx*dx + dy*dy);
+    if(dist < 30){
+      f.x = Math.random()*canvas.width;
+      f.y = Math.random()*canvas.height;
+    } else {
+      f.x += dx/dist * f.speed*0.08;
+      f.y += dy/dist * f.speed*0.08;
+    }
+    drawGlowCircle(f.x,f.y,f.r,"#ffff77",f.brightness);
+    f.brightness += (Math.random()-0.5)*0.05;
+    if(f.brightness<0.4) f.brightness=0.4;
+    if(f.brightness>1) f.brightness=1;
+  });
+
+  // Plants
+  plants.forEach(p=>drawPlant(p));
+
+  // Sparkles from keyboard
+  for(let i=sparkles.length-1;i>=0;i--){
+    let sp = sparkles[i];
+    drawGlowCircle(sp.x,sp.y,sp.r,"#ffccff",sp.brightness);
+    sp.x += sp.dx;
+    sp.y += sp.dy;
+    sp.ttl--;
+    if(sp.ttl<=0) sparkles.splice(i,1);
+  }
+
+  requestAnimationFrame(animate);
+}
+
+animate();
+</script>
+<a href="gamemenu.html" 
+   style="
+     position: fixed;
+     top: 15px;
+     right: 15px;
+     padding: 0.5em 1em;
+     background: rgba(255,255,255,0.2);
+     color: #ffffcc;
+     border: 2px solid #ffffcc;
+     border-radius: 8px;
+     text-decoration: none;
+     font-weight: bold;
+     font-family: monospace;
+     z-index: 1000;
+     transition: all 0.2s;
+   "
+   onmouseover="this.style.background='rgba(255,255,255,0.5)'; this.style.color='#0a0a20';"
+   onmouseout="this.style.background='rgba(255,255,255,0.2)'; this.style.color='#ffffcc';"
+>
+  Back to Game Menu
+</a>
+
+</body>
+</html>
