@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Chrono Nebula Garden — Interactive</title>
+<style>
+  :root{
+    --panel-bg: rgba(0,0,0,0.35);
+    --accent: #8ef0d6;
+  }
+  html,body{
+    height:100%;
+    margin:0;
+    background: #07111a;
+    font-family: "Courier New", monospace;
+    overflow: hidden;
+    color: #dffaf1;
+  }
+
+  canvas { position:fixed; inset:0; width:100%; height:100%; display:block; z-index:0; background: transparent; }
+
+  /* UI */
+  #ui {
+    position: fixed;
+    left: 16px;
+    top: 16px;
+    z-index: 2000;
+    display:flex;
+    gap:10px;
+    align-items:center;
+    pointer-events: auto;
+  }
+  .btn {
+    background: var(--panel-bg);
+    border: 1px solid rgba(142,240,214,0.18);
+    color: #cffff0;
+    padding: 8px 10px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 13px;
+    user-select: none;
+    backdrop-filter: blur(6px);
+  }
+  .hint {
+    background: rgba(0,0,0,0.25);
+    padding: 8px 12px;
+    border-radius: 10px;
+    font-size: 13px;
+  }
+  #controls {
+    position: fixed;
+    right: 16px;
+    top: 16px;
+    z-index:2000;
+    text-align:right;
+    background: var(--panel-bg);
+    padding:10px;
+    border-radius: 10px;
+    border:1px solid rgba(142,240,214,0.08);
+    font-size:13px;
+  }
+  a.back {
+    position: fixed;
+    left:16px;
+    bottom:16px;
+    z-index:2000;
+    text-decoration:none;
+    color: #b8fff0;
+    background: rgba(0,0,0,0.24);
+    padding:8px 10px;
+    border-radius:8px;
+    border:1px solid rgba(142,240,214,0.08);
+  }
+  /* tiny mobile tweaks */
+  @media (max-width:600px){
+    .hint{ display:none; }
+    .btn{ padding:6px 8px; font-size:12px; }
+    #controls{ font-size:12px; left:10px; right:10px; }
+  }
+</style>
+</head>
+<body>
+  <canvas id="c"></canvas>
+
+  <div id="ui">
+    <button id="soundBtn" class="btn">🔊 Sound: ON (S)</button>
+    <div class="hint">Move to paint • Click to star-burst • Keys: 1 blossom 2 rewind 3 freeze 4 night M palette C cycle mode</div>
+  </div>
+
+  <div id="controls">
+    <div><strong>Mode:</strong> <span id="modeLabel">Fog + Sparks</span></div>
+    <div><strong>Palette:</strong> <span id="palLabel">Blue-Teal</span> (M)</div>
+  </div>
+
+  <a class="back" href="gamesmenu.html">⬅ Back to Games Menu</a>
+
+<script>
+(() => {
+  // Canvas setup
+  const canvas = document.getElementById('c');
+  const ctx = canvas.getContext('2d', { alpha: true });
+  function resize(){ canvas.width = innerWidth; canvas.height = innerHeight; }
+  addEventListener('resize', resize);
+  resize();
+
+  // State
+  let mouse = { x: canvas.width/2, y: canvas.height/2, down:false, inside:true };
+  addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; mouse.inside = true; });
+  addEventListener('mouseleave', ()=> mouse.inside = false);
+  addEventListener('mousedown', ()=> mouse.down = true);
+  addEventListener('mouseup', ()=> mouse.down = false);
+
+  // Controls
+  const soundBtn = document.getElementById('soundBtn');
+  const modeLabel = document.getElementById('modeLabel');
+  const palLabel = document.getElementById('palLabel');
+  let SOUND = true;
+  soundBtn.addEventListener('click', ()=> toggleSound());
+
+  // WebAudio basic synths + ambient drone
+  let audioCtx = null;
+  function initAudio(){
+    if (audioCtx) return;
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    // ambient drone node
+    droneGain = audioCtx.createGain(); droneGain.gain.value = 0.0;
+    const droneOsc = audioCtx.createOscillator(); droneOsc.type = 'sine';
+    droneOsc.frequency.value = 48; // low drone
+    const droneOsc2 = audioCtx.createOscillator(); droneOsc2.type = 'sine';
+    droneOsc2.frequency.value = 62;
+    const dGain2 = audioCtx.createGain(); dGain2.gain.value = 0.02;
+    droneOsc.connect(droneGain); droneOsc2.connect(dGain2); dGain2.connect(droneGain); droneGain.connect(audioCtx.destination);
+    droneOsc.start(); droneOsc2.start();
+    // subtle LFO movement
+    const lfo = audioCtx.createOscillator(); lfo.frequency.value = 0.08;
+    const lfoGain = audioCtx.createGain(); lfoGain.gain.value = 6;
+    lfo.connect(lfoGain);
+    lfoGain.connect(droneOsc.frequency);
+    lfo.start();
+    // simple chime function will be used later
+  }
+  let droneGain = null;
+
+  function playChime(){
+    if (!SOUND) return;
+    initAudio();
+    const now = audioCtx.currentTime;
+    const o = audioCtx.createOscillator();
+    const g = audioCtx.createGain();
+    o.type = 'sine';
+    const base = 720 + Math.random()*220;
+    o.frequency.setValueAtTime(base, now);
+    g.gain.setValueAtTime(0.0001, now);
+    g.gain.exponentialRampToValueAtTime(0.12, now+0.01);
+    g.gain.exponentialRampToValueAtTime(0.0003, now+1.2);
+    o.connect(g); g.connect(audioCtx.destination);
+    o.start(now); o.stop(now+1.2);
+  }
+
+  function playReverseBell(){
+    if (!SOUND) return;
+    initAudio();
+    // quick descending tone with reverb-ish envelope
+    const now = audioCtx.currentTime;
+    const o = audioCtx.createOscillator(); o.type='sine';
+    const g = audioCtx.createGain();
+    o.frequency.setValueAtTime(960, now);
+    o.frequency.exponentialRampToValueAtTime(220, now+0.8);
+    g.gain.setValueAtTime(0.0001, now);
+    g.gain.linearRampToValueAtTime(0.14, now+0.02);
+    g.gain.exponentialRampToValueAtTime(0.0001, now+0.9);
+    o.connect(g); g.connect(audioCtx.destination);
+    o.start(now); o.stop(now+1.0);
+  }
+
+  function toggleSound(){
+    SOUND = !SOUND;
+    soundBtn.textContent = SOUND ? '🔊 Sound: ON (S)' : '🔇 Sound OFF (S)';
+    if (SOUND) initAudio();
+    if (droneGain) droneGain.gain.setTargetAtTime(SOUND ? 0.03 : 0.0, audioCtx.currentTime, 0.4);
+  }
+
+  // Pause/resume sound via keyboard
+  addEventListener('keydown', (e) => {
+    const k = e.key.toLowerCase();
+    if (k === 's') toggleSound();
+    if (k === 'm') cyclePalette();
+    if (k === 'c') cyclePaintMode();
+    if (k === '1') blossomAll();
+    if (k === '2') startRewind();
+    if (k === '3') startFreeze();
+    if (k === '4') toggleNight();
+  });
+
+// Extra Palettes
+const palettes = [
+  // existing ones (keep these)
+  { bg: ['#061528','#072232'], plant: ['#9ef0d6','#49ffd6'], nebula: ['#52f3ff','#8ef0d6','#66b8ff'] , label:'Blue-Teal' },
+  { bg: ['#081220','#061827'], plant: ['#b6f6ff','#78e7d1'], nebula: ['#a6d6ff','#6bd9c7','#7ab3ff'], label:'Mint Ocean' },
+  { bg: ['#06162a','#040f1a'], plant: ['#d8ffea','#8ef0d6'], nebula: ['#7ef1c8','#b4fff0','#61e0ff'], label:'Deep Aqua' },
+
+  // New Palettes
+  { bg: ['#0b1a0f','#071207'], plant: ['#9ff0a1','#4ff28b'], nebula: ['#4ff2b0','#7af2d0','#3ce29a'], label:'Emerald Mist' },
+  { bg: ['#102027','#0c1b20'], plant: ['#7ed1ff','#4ebaff'], nebula: ['#70d1ff','#50c4f0','#3aa8e0'], label:'Azure Night' },
+  { bg: ['#1a0e26','#120817'], plant: ['#d68eff','#a45aff'], nebula: ['#b07eff','#905aff','#6b3aff'], label:'Violet Bloom' },
+  { bg: ['#1f1008','#120804'], plant: ['#ffa36b','#ff7b48'], nebula: ['#ffb77a','#ffa36b','#ff8c5e'], label:'Sunset Grove' },
+  { bg: ['#0a1017','#05080c'], plant: ['#fffac8','#dff6a0'], nebula: ['#fffbb0','#e0f4a0','#baf28f'], label:'Lemon Fern' }
+];
+  let palIndex = 0;
+  function cyclePalette(){
+    palIndex = (palIndex+1) % palettes.length;
+    palLabel.textContent = palettes[palIndex].label;
+  }
+
+  // Night toggle (inverts/lowers brightness)
+  let NIGHT = false;
+  function toggleNight(){
+    NIGHT = !NIGHT;
+    playChime();
+  }
+
+  // Paint modes: 0 = fog+sparks (combined), 1 = fog only, 2 = sparks only, 3 = ripples
+  let paintMode = 0;
+  function cyclePaintMode(){ paintMode = (paintMode+1) % 4; updateModeLabel(); }
+  function updateModeLabel(){
+    const labels = ['Fog + Sparks','Fog only','Sparks only','Ripples'];
+    modeLabel.textContent = labels[paintMode];
+  }
+  updateModeLabel();
+
+  // Freeze control
+  let FROZEN = false;
+  function startFreeze(){
+    FROZEN = true;
+    playReverseBell();
+    setTimeout(()=>{ FROZEN = false; }, 5000); // freeze 5s
+  }
+
+  // Rewind control: we animate plants shrinking for 3 seconds
+  let REWINDING = false;
+  function startRewind(){
+    REWINDING = true;
+    playReverseBell();
+    setTimeout(()=>{ REWINDING = false; }, 3000);
+  }
+
+  // Plants system (elegant tall plants)
+  class Plant {
+    constructor(x){
+      this.x = x;
+      this.baseY = canvas.height - Math.random()*40 - 20;
+      this.height = 90 + Math.random()*90;
+      this.growth = Math.random()*0.5; // 0..1
+      this.speed = 0.002 + Math.random()*0.003; // growth per ms
+      this.leafCount = 3 + Math.floor(Math.random()*3);
+      this.glow = Math.random()*0.6+0.4;
+      this.color = palettes[palIndex].plant[0];
+      this.blooming = false;
+      this.age = 0;
+      this.branchNoise = Math.random()*1000;
+    }
+    update(dt){
+      if (FROZEN) return;
+      if (REWINDING){
+        this.growth = Math.max(0, this.growth - this.speed * dt * 1.8);
+      } else {
+        this.growth = Math.min(1, this.growth + this.speed * dt);
+      }
+      this.age += dt;
+      // gentle glow changes
+      this.glow += (Math.random()-0.5)*0.01;
+      this.glow = Math.max(0.3, Math.min(1, this.glow));
+      // update color from palette (in draw we fetch current palette)
+    }
+    forceGrow(amount=0.25){
+      this.growth = Math.min(1, this.growth + amount);
+      this.blooming = true;
+      setTimeout(()=> this.blooming = false, 700);
+    }
+    shrink(amount=0.25){
+      this.growth = Math.max(0, this.growth - amount);
+    }
+    draw(ctx){
+      const pal = palettes[palIndex];
+      const gx = this.x;
+      const baseY = this.baseY;
+      const h = this.height * this.growth;
+      // stem
+      ctx.save();
+      ctx.lineWidth = 3;
+      ctx.lineCap = 'round';
+      // dynamic color slightly brighter when hovered
+      const hoverDist = Math.hypot(mouse.x - this.x, mouse.y - (baseY - h/2));
+      const hoverFactor = Math.max(0, 1 - (hoverDist / 180));
+      const stemColor = NIGHT ? shadeColor(pal.plant[0], -25) : pal.plant[0];
+      ctx.strokeStyle = stemColor;
+      ctx.beginPath();
+      // stem with slight bezier sway
+      const sway = Math.sin((this.age/600) + this.branchNoise) * 10 * (0.4 + 0.6*this.growth);
+      ctx.moveTo(gx, baseY);
+      ctx.quadraticCurveTo(gx + sway, baseY - h*0.5, gx, baseY - h);
+      ctx.stroke();
+
+      // leaves
+      for (let i=0;i<this.leafCount;i++){
+        const t = (i+1)/(this.leafCount+1);
+        const lx = gx + Math.sin(this.age/700 + i) * 8 * (1 - this.growth*0.4);
+        const ly = baseY - h * t;
+        const leafR = 8 + 6 * (this.growth);
+        drawGlow(ctx, lx, ly, leafR, pal.plant[1], 0.8 * (0.5 + hoverFactor*0.5));
+      }
+
+      // tip blossom / glowing pod
+      const tipY = baseY - h;
+      drawGlow(ctx, gx, tipY, 10 + 10*this.growth, pal.plant[0], 0.6 + 0.6*hoverFactor);
+
+      // optional flower when blooming
+      if (this.blooming){
+        drawStarLike(ctx, gx, tipY - 6, 6 + 10*this.growth, palettes[palIndex].nebula[1]);
+      }
+      ctx.restore();
+    }
+  }
+
+  function shadeColor(hex, amt){
+    // hex like #aabbcc, amt negative darker or positive lighter
+    const col = hex.replace('#','');
+    const num = parseInt(col,16);
+    let r = (num>>16) + amt; r = Math.max(0, Math.min(255,r));
+    let g = (num>>8 & 0x00FF) + amt; g = Math.max(0, Math.min(255,g));
+    let b = (num & 0x0000FF) + amt; b = Math.max(0, Math.min(255,b));
+    return '#' + ( (1<<24) + (r<<16) + (g<<8) + b ).toString(16).slice(1);
+  }
+
+  function drawGlow(ctx,x,y,r,color,alpha=1){
+    const grad = ctx.createRadialGradient(x,y,0,x,y,r);
+    grad.addColorStop(0, `rgba(255,255,255,${0.9*alpha})`);
+    grad.addColorStop(0.3, color);
+    grad.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = grad;
+    ctx.beginPath(); ctx.arc(x,y,r,0,Math.PI*2); ctx.fill();
+  }
+
+  function drawStarLike(ctx,x,y,r,color){
+    ctx.save();
+    ctx.fillStyle = color;
+    ctx.globalAlpha = 0.93;
+    for (let i=0;i<6;i++){
+      ctx.beginPath();
+      ctx.ellipse(x + Math.cos(i/6*Math.PI*2)*r/2, y + Math.sin(i/6*Math.PI*2)*r/2, r/2, r/6, i/6*Math.PI*2, 0, Math.PI*2);
+      ctx.fill();
+    }
+    ctx.restore();
+  }
+
+  // Plant field
+  const plants = [];
+  function spawnPlants(){
+    plants.length = 0;
+    const cols = Math.max(4, Math.floor(canvas.width/120));
+    for (let i=0;i<cols;i++){
+      const x = (canvas.width/(cols+1))*(i+1) + (Math.random()-0.5)*40;
+      plants.push(new Plant(x));
+    }
+  }
+  spawnPlants();
+  addEventListener('resize', spawnPlants);
+
+  function blossomAll(){
+    plants.forEach(p => p.forceGrow(0.4));
+    playChime();
+  }
+
+  // Paint system - combined fog + sparks + ripples
+  const fogs = []; // soft large particles
+  const sparks = []; // tiny fast sparks
+  const ripples = []; // circular disturbances for click
+
+  function spawnPaint(mx,my){
+    if (paintMode === 2) { // sparks only
+      for (let i=0;i<10;i++) createSpark(mx,my);
+    } else if (paintMode === 1) { // fog only
+      for (let i=0;i<3;i++) createFog(mx + (Math.random()-0.5)*40, my + (Math.random()-0.5)*40);
+    } else if (paintMode === 3) { // ripples only
+      ripples.push({x:mx,y:my,r:4,life:0});
+    } else { // both combined
+      for (let i=0;i<4;i++) createFog(mx + (Math.random()-0.5)*30, my + (Math.random()-0.5)*30);
+      for (let i=0;i<8;i++) createSpark(mx + (Math.random()-0.5)*10, my + (Math.random()-0.5)*10);
+    }
+  }
+
+  function createFog(x,y){
+    const pal = palettes[palIndex].nebula;
+    fogs.push({
+      x,y,
+      r: 12 + Math.random()*36,
+      grow: 0.2 + Math.random()*0.8,
+      life: 2000 + Math.random()*3000,
+      birth: performance.now(),
+      color: pal[Math.floor(Math.random()*pal.length)]
+    });
+  }
+  function createSpark(x,y){
+    const pal = palettes[palIndex].nebula;
+    sparks.push({
+      x,y,
+      vx: (Math.random()-0.5)*3,
+      vy: (Math.random()-0.8)*3 - 0.5,
+      r: 1 + Math.random()*2,
+      life: 600 + Math.random()*700,
+      birth: performance.now(),
+      color: pal[Math.floor(Math.random()*pal.length)]
+    });
+  }
+
+  // click star burst
+  addEventListener('click', (e) => {
+    if (!mouse.inside) return;
+    // spawn ripples and a bunch of paint
+    for (let i=0;i<12;i++) createSpark(mouse.x + (Math.random()-0.5)*40, mouse.y + (Math.random()-0.5)*40);
+    for (let i=0;i<6;i++) createFog(mouse.x + (Math.random()-0.5)*60, mouse.y + (Math.random()-0.5)*60);
+    ripples.push({x:mouse.x,y:mouse.y,r:6,life:0});
+    playChime();
+  });
+
+  // auto paint while moving
+  let lastPaint = 0;
+  function maybePaint(now){
+    if (FROZEN) return;
+    const speed = Math.hypot((mouse.x - (maybePaint._lastX||mouse.x)), (mouse.y - (maybePaint._lastY||mouse.y)));
+    maybePaint._lastX = mouse.x; maybePaint._lastY = mouse.y;
+    // paint a little depending on movement & mousedown
+    if (mouse.down || speed > 2 || Math.random() < 0.06){
+      spawnPaint(mouse.x, mouse.y);
+      // occasional soft sound
+      if (Math.random() < 0.06) playChime();
+    }
+  }
+
+  // Main loop
+  let last = performance.now();
+  function loop(now){
+    const dt = now - last;
+    last = now;
+    if (!FROZEN) {
+      // slowly change palette background drift
+    }
+
+    // background gradient (soft mist)
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    // ambient background color shift
+    const pal = palettes[palIndex];
+    const bgTop = NIGHT ? '#020814' : pal.bg[0];
+    const bgBot = NIGHT ? '#00060c' : pal.bg[1];
+    const g = ctx.createLinearGradient(0,0,0,canvas.height);
+    g.addColorStop(0, bgTop); g.addColorStop(1, bgBot);
+    ctx.fillStyle = g; ctx.fillRect(0,0,canvas.width,canvas.height);
+
+    // moving mist blobs (large soft ellipses)
+    const t = now/30000;
+    for (let i=0;i<4;i++){
+      const sx = canvas.width*(0.2 + i*0.2) + Math.sin(t*(0.3+i*0.1))*120;
+      const sy = canvas.height*0.2 + Math.cos(t*(0.2+i*0.12))*40 + i*10;
+      const rx = 380 + i*90;
+      const ry = 120 + i*40;
+      const grad = ctx.createRadialGradient(sx,sy,0,sx,sy,Math.max(rx,ry));
+      const c = palettes[palIndex].nebula[i%palettes[palIndex].nebula.length];
+      grad.addColorStop(0, hexToRgba(c, (i===0?0.22:0.14)));
+      grad.addColorStop(1, hexToRgba('#000000',0));
+      ctx.globalCompositeOperation = 'lighter';
+      ctx.fillStyle = grad; ctx.beginPath();
+      ctx.ellipse(sx,sy,rx,ry,0,0,Math.PI*2); ctx.fill();
+      ctx.globalCompositeOperation = 'source-over';
+    }
+
+    // update plants
+    plants.forEach(p => p.update(dt));
+    // draw nebula fog particles (fogs)
+    const nowMs = performance.now();
+    for (let i=fogs.length-1;i>=0;i--){
+      const f = fogs[i];
+      const age = nowMs - f.birth;
+      const lifeRatio = age / f.life;
+      if (lifeRatio >= 1){ fogs.splice(i,1); continue; }
+      const alpha = 0.5 * (1 - lifeRatio);
+      const r = f.r * (1 + 0.8*lifeRatio);
+      drawSoftCircle(ctx, f.x + Math.sin(age/1000)*6, f.y + Math.cos(age/800)*4, r, f.color, alpha);
+    }
+    // update sparks
+    for (let i=sparks.length-1;i>=0;i--){
+      const s = sparks[i];
+      const age = nowMs - s.birth;
+      if (age > s.life){ sparks.splice(i,1); continue; }
+      // motion
+      s.vy += 0.02 * (REWINDING ? -0.5 : 1); // tiny gravity
+      s.x += s.vx * (REWINDING ? -1 : 1);
+      s.y += s.vy * (REWINDING ? -1 : 1);
+      const alpha = 0.9 * (1 - age/s.life);
+      drawSoftCircle(ctx, s.x, s.y, s.r * (1 + (1 - age/s.life)*1.4), s.color, alpha);
+    }
+
+    // ripples
+    for (let i=ripples.length-1;i>=0;i--){
+      const r = ripples[i];
+      r.life += dt/16;
+      const rad = r.r * r.life * 6;
+      const alpha = Math.max(0, 0.8 - r.life*0.6);
+      ctx.strokeStyle = hexToRgba('#bfffe8', alpha);
+      ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.arc(r.x, r.y, rad, 0, Math.PI*2); ctx.stroke();
+      if (r.life > 1.4) ripples.splice(i,1);
+    }
+
+    // draw plants (over nebula)
+    plants.forEach(p => p.draw(ctx));
+
+    // subtle overlay stars (twinkle)
+    for (let i=0;i<30;i++){
+      const sx = (i*73 + (now/30)) % canvas.width;
+      const sy = canvas.height*0.08 + (i*31 % (canvas.height*0.6));
+      const r = 0.6 + Math.abs(Math.sin((now/800)+(i))) * 1.1;
+      ctx.globalAlpha = 0.18 * (1 - (i%7)/9) * (NIGHT ? 1.3 : 1.0);
+      ctx.fillStyle = palettes[palIndex].nebula[i % palettes[palIndex].nebula.length];
+      ctx.beginPath(); ctx.arc(sx, sy, r, 0, Math.PI*2); ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+
+    // maybe auto paint
+    maybePaint(now);
+
+    requestAnimationFrame(loop);
+  }
+  requestAnimationFrame(loop);
+
+  // helpers
+  function drawSoftCircle(ctx,x,y,r,color,alpha=0.6){
+    const grad = ctx.createRadialGradient(x,y,0,x,y,r);
+    grad.addColorStop(0, hexToRgba('#ffffff', alpha*0.9));
+    grad.addColorStop(0.25, hexToRgba(color, alpha*0.9));
+    grad.addColorStop(1, hexToRgba('#000000', 0));
+    ctx.globalCompositeOperation = 'lighter';
+    ctx.fillStyle = grad;
+    ctx.beginPath(); ctx.arc(x,y,r,0,Math.PI*2); ctx.fill();
+    ctx.globalCompositeOperation = 'source-over';
+  }
+  function hexToRgba(hex, a=1){
+    hex = hex.replace('#','');
+    const n = parseInt(hex,16);
+    const r = (n>>16)&255; const g = (n>>8)&255; const b = n&255;
+    return `rgba(${r},${g},${b},${a})`;
+  }
+  function drawGlow(ctx,x,y,r,color,alpha=1){
+    drawSoftCircle(ctx,x,y,r,color,alpha);
+  }
+
+  // initial drone start if sound enabled
+  addEventListener('mousemove', function firstAudio(){
+    // start audio after user interacts (unmute policy)
+    if (!audioCtx && SOUND){
+      initAudio();
+      if (droneGain) droneGain.gain.setTargetAtTime(0.03, audioCtx.currentTime, 0.6);
+    }
+    removeEventListener('mousemove', firstAudio);
+  });
+
+  // small housekeeping for palettes on resize etc
+  setInterval(()=> {
+    // ensure palIndex valid (if palettes changed)
+    if (palIndex >= palettes.length) palIndex = 0;
+  }, 1000);
+
+  // expose some functions for keyboard / UI
+  window.cyclePaintMode = cyclePaintMode;
+  window.cyclePalette = cyclePalette;
+  window.blossomAll = blossomAll;
+  window.startRewind = startRewind;
+  window.startFreeze = startFreeze;
+  window.toggleNight = toggleNight;
+
+  // tiny visual feedback on freeze/rewind (play reverse bell for rewind)
+  // (playReverseBell already wired inside startRewind/startFreeze)
+
+  // End IIFE
+})();
+</script>
+</body>
+</html>
