@@ -4,24 +4,41 @@
   <title>Chloe’s Games 🎮</title>
   <style>
     body {
-      background: #fff5ee;
+      background-color: #fff5ee;
+      background-image: 
+        repeating-linear-gradient(
+          45deg,
+          #ffeaea,
+          #ffeaea 10px,
+          #fff5ee 10px,
+          #fff5ee 20px
+        ),
+        repeating-linear-gradient(
+          -45deg,
+          #ffeaea,
+          #ffeaea 10px,
+          #fff5ee 10px,
+          #fff5ee 20px
+        );
       font-family: "Courier New", monospace;
       margin: 0;
       padding: 2em;
       text-align: center;
       color: #4b3621;
+      overflow-x: hidden;
+      position: relative;
     }
 
     h1 {
       font-size: 2rem;
       color: #d87c7c;
-      text-shadow: 0 0 4px #ffdede;
-      margin-bottom: 1.5em;
+      text-shadow: 0 0 4px #ffdede, 0 0 6px #ffcccc;
+      margin-bottom: 2em;
     }
 
     .game-link {
       display: block;
-      margin: 1em auto;
+      margin: 1.2em auto;
       padding: 0.8em 1.5em;
       font-size: 1rem;
       border: 2px solid #d87c7c;
@@ -32,12 +49,14 @@
       font-weight: bold;
       transition: all 0.3s;
       width: 250px;
+      position: relative;
+      z-index: 1;
     }
 
     .game-link:hover {
       background: #d87c7c;
       color: #fff5ee;
-      box-shadow: 0 0 8px #ffb3b3;
+      box-shadow: 0 0 8px #ffb3b3, 0 0 16px #d87c7c;
     }
 
     #nav {
@@ -56,6 +75,8 @@
       font-weight: bold;
       text-shadow: 0 0 2px #d87c7c;
       transition: all 0.25s ease-in-out;
+      position: relative;
+      z-index: 1;
     }
 
     #nav a:hover {
@@ -63,23 +84,52 @@
       color: #fff5ee;
       box-shadow: 0 0 8px #ffb3b3, 0 0 16px #d87c7c;
     }
+
+    /* Floating sparkles */
+    .sparkle {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      background: #ffdede;
+      border-radius: 50%;
+      opacity: 0.8;
+      animation: float 6s linear infinite;
+      pointer-events: none;
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-50px) rotate(180deg); }
+      100% { transform: translateY(0) rotate(360deg); }
+    }
   </style>
 </head>
 <body>
   <h1>🎮 GAME MENU 🎮</h1>
 
+    <a class="game-link" href="Catchgame.html">Neon Catch Game</a>
+  <a class="game-link" href="FlappyGhost.html">Ghost Flappy</a>
+  <a class="game-link" href="TinyWorlds.html">Tiny Worlds Explorer</a>
+
   <div id="nav">
-<h1>Other Links</h1>
-<a href="homePage.html">Home</a>
+    <a href="homePage.html">Home</a>
     <a href="aboutMePage.html">About Me</a>
     <a href="sparklepage.html">My Thoughts</a>
     <a href="Chat.html">Chat</a>
   </div>
 
-<h1>GAME LINKS</h1> 
-<a class="game-link" href="catchgame.html">Neon Catch Game</a>
-  <a class="game-link" href="flappy.html">Ghost Flappy</a>
-  <a class="game-link" href="TinyWorlds.html">Tiny Worlds Explorer</a>
 
+  <!-- Sparkles container -->
+  <script>
+    const sparkleCount = 30;
+    for (let i = 0; i < sparkleCount; i++) {
+      const sparkle = document.createElement('div');
+      sparkle.className = 'sparkle';
+      sparkle.style.left = Math.random() * window.innerWidth + 'px';
+      sparkle.style.top = Math.random() * window.innerHeight + 'px';
+      sparkle.style.animationDuration = (4 + Math.random() * 4) + 's';
+      document.body.appendChild(sparkle);
+    }
+  </script>
 </body>
 </html>
