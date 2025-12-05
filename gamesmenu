@@ -77,8 +77,8 @@
   </div>
 
 <h1>GAME LINKS</h1> 
-<a class="game-link" href="Catchgame.html">Neon Catch Game</a>
-  <a class="game-link" href="FlappyGhost.html">Ghost Flappy</a>
+<a class="game-link" href="catchgame.html">Neon Catch Game</a>
+  <a class="game-link" href="flappy.html">Ghost Flappy</a>
   <a class="game-link" href="TinyWorlds.html">Tiny Worlds Explorer</a>
 
 </body>
