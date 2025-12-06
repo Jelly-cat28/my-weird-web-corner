@@ -1,0 +1,511 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Psychic Glitch Garden — Psychedelic Chaos</title>
+<style>
+  html,body{height:100%;margin:0;background:#070010;overflow:hidden;font-family:monospace}
+  #back {
+    position:fixed; left:12px; top:12px; z-index:12000;
+    background:rgba(0,0,0,0.45); color:#fff; padding:8px 10px; border-radius:8px; text-decoration:none;
+    border:1px solid rgba(255,255,255,0.06);
+  }
+  #hud {
+    position:fixed; right:12px; top:12px; z-index:12000; color:#fff; font-size:13px;
+    background:linear-gradient(0deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01)); padding:8px; border-radius:8px;
+    border:1px solid rgba(255,255,255,0.04);
+  }
+  #msg {
+    position:fixed; left:50%; top:10%; transform:translateX(-50%); z-index:12000;
+    color:#fff; padding:10px 18px; border-radius:10px; font-weight:bold; letter-spacing:1px;
+    background:linear-gradient(90deg, rgba(0,0,0,0.5), rgba(255,255,255,0.03));
+    display:none;
+  }
+  canvas{display:block; width:100%; height:100%;}
+</style>
+</head>
+<body>
+<a id="back" href="gamesmenu.html">← Back to Menu</a>
+<div id="hud">Keys: M meltdown • V neon • C clear • R respawn • S slow (hold) • E evolution</div>
+<div id="msg"></div>
+<canvas id="c"></canvas>
+
+<script>
+(() => {
+  // --- Setup canvas & resize ---
+  const canvas = document.getElementById('c');
+  const ctx = canvas.getContext('2d', { alpha: true });
+  let W=innerWidth, H=innerHeight;
+  function resize(){ W = canvas.width = innerWidth; H = canvas.height = innerHeight; }
+  addEventListener('resize', resize); resize();
+
+  // --- Audio (WebAudio) ---
+  let audioCtx = null;
+  function ensureAudio(){
+    if (audioCtx) return;
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    master = audioCtx.createGain(); master.gain.value = 0.6; master.connect(audioCtx.destination);
+    ambientOsc = audioCtx.createOscillator(); ambientOsc.type='sine'; ambientOsc.frequency.value=55;
+    ambientGain = audioCtx.createGain(); ambientGain.gain.value = 0.003;
+    ambientOsc.connect(ambientGain); ambientGain.connect(master); ambientOsc.start();
+  }
+  function smallChime(freq=600, dur=0.12){
+    if (!audioCtx) return;
+    const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+    o.type='sine'; o.frequency.value = freq * (1 + Math.random()*0.08);
+    g.gain.setValueAtTime(0.0001, audioCtx.currentTime);
+    g.gain.linearRampToValueAtTime(0.12, audioCtx.currentTime + 0.01);
+    g.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + dur + 0.05);
+    o.connect(g); g.connect(master);
+    o.start(); o.stop(audioCtx.currentTime + dur);
+  }
+  function whoosh(freq=100, dur=0.5){
+    if (!audioCtx) return;
+    const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+    o.type='sawtooth'; o.frequency.setValueAtTime(freq, audioCtx.currentTime);
+    o.frequency.exponentialRampToValueAtTime(freq*0.2, audioCtx.currentTime + dur);
+    g.gain.setValueAtTime(0.0001, audioCtx.currentTime);
+    g.gain.linearRampToValueAtTime(0.08, audioCtx.currentTime+0.02);
+    g.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime+dur+0.05);
+    o.connect(g); g.connect(master); o.start(); o.stop(audioCtx.currentTime+dur);
+  }
+
+  // --- Globals & settings ---
+  const things = [];
+  const glyphs = ["✦","✧","✶","✷","✸","✺","★","☆","✺","❂","⟡","◎","◉","◒","◐","✪","⚝"];
+  let TIME_SCALE = 1;
+  let NEON = true;
+  let MELTDOWN_AUTO = true;
+  let CRAZY = true;
+  let msgTimer = null;
+  const msgBox = document.getElementById('msg');
+
+  // UI helpers
+  function showMsg(text, ms=1600){
+    msgBox.style.display='block'; msgBox.style.opacity=1; msgBox.textContent=text;
+    if (msgTimer) clearTimeout(msgTimer);
+    msgTimer = setTimeout(()=>{ msgBox.style.transition='opacity 600ms'; msgBox.style.opacity=0; setTimeout(()=>msgBox.style.display='none',700); }, ms);
+  }
+
+  // --- Thing class: evolving symbol entity ---
+  class Thing {
+    constructor(x,y){
+      this.x = x ?? Math.random()*W;
+      this.y = y ?? Math.random()*H;
+      this.vx = (Math.random()-0.5)*1.4;
+      this.vy = (Math.random()-0.5)*1.4;
+      this.size = 18 + Math.random()*36;
+      this.growth = 0; // growth accumulator
+      this.spin = (Math.random()-0.5)*0.02;
+      this.angle = Math.random()*Math.PI*2;
+      this.symbol = glyphs[Math.floor(Math.random()*glyphs.length)];
+      this.hue = Math.random()*360;
+      this.opacity = 0.9;
+      this.type = 'symbol'; // symbol, eye, vortex, hole, critter
+      this.age = 0;
+      this.mutationTimer = Date.now() + 3000 + Math.random()*10000;
+      this.trail = []; // last positions for trailing effect
+      this.maxTrail = 6 + Math.floor(Math.random()*7);
+      this.growing = true;
+      this.energy = 0;
+    }
+
+    step(dt){
+      if (FROZEN) return;
+      this.age += dt;
+      // movement + tiny wander influenced by Perlin-ish noise
+      this.vx += (Math.random()-0.5)*0.03 * (NEON?1.3:1);
+      this.vy += (Math.random()-0.5)*0.03 * (NEON?1.3:1);
+      this.x += this.vx * dt * 0.06 * TIME_SCALE;
+      this.y += this.vy * dt * 0.06 * TIME_SCALE;
+      // wrap edges
+      if (this.x < -80) this.x = W + 80;
+      if (this.x > W + 80) this.x = -80;
+      if (this.y < -80) this.y = H + 80;
+      if (this.y > H + 80) this.y = -80;
+      // growth energy
+      if (this.growing) { this.growth += 0.0006 * dt * (1 + Math.random()*0.6); this.size += this.growth * 0.02; this.energy += 0.003 * dt; }
+      // trail update
+      this.trail.unshift({x:this.x,y:this.y,sz:this.size});
+      if (this.trail.length>this.maxTrail) this.trail.pop();
+      // mutate sometimes
+      if (Date.now() > this.mutationTimer) { this.mutate(); this.mutationTimer = Date.now() + 4000 + Math.random()*16000; }
+    }
+
+    mutate(){
+      const r = Math.random();
+      if (r < 0.12) { this.type = 'eye'; this.symbol = '👁'; smallChime(880); showMsg('an eye awakens',800); }
+      else if (r < 0.22) { this.type = 'vortex'; this.symbol = '◌'; smallChime(520); showMsg('a vortex hums',900); }
+      else if (r < 0.32) { this.type = 'hole'; this.symbol = '○'; smallChime(320); showMsg('a hole appears',700); }
+      else if (r < 0.4) { this.type = 'critter'; this.symbol = '☻'; smallChime(660); showMsg('something stirs',800); }
+      else { // cosmetic mutate
+        this.symbol = glyphs[Math.floor(Math.random()*glyphs.length)];
+        this.hue = (this.hue + Math.random()*80 - 40 + 360) % 360;
+        showMsg('it shivers',500);
+      }
+      // sometimes split
+      if (Math.random() < 0.12) this.split();
+    }
+
+    split(){
+      if (things.length > 220) return;
+      const child = new Thing(this.x + (Math.random()-0.5)*20, this.y + (Math.random()-0.5)*20);
+      child.size = this.size * 0.6;
+      child.hue = (this.hue + 40) % 360;
+      child.symbol = this.symbol;
+      things.push(child);
+      smallChime(720,0.1);
+    }
+
+    draw(ctx){
+      // colorful glow & trails for psychedelic
+      ctx.save();
+      ctx.translate(this.x, this.y);
+      ctx.rotate(this.angle);
+      // trail glow
+      for (let i= this.trail.length-1; i>=0; i--){
+        const t = this.trail[i]; const a = (i / this.trail.length) * 0.5;
+        ctx.fillStyle = `hsla(${this.hue + i*6},90%,60%,${a})`;
+        ctx.beginPath(); ctx.arc(t.x - this.x, t.y - this.y, t.sz*0.5*(i/this.trail.length + 0.2), 0, Math.PI*2); ctx.fill();
+      }
+      // main bloom
+      const hue = this.hue + Math.sin(this.age*0.003)*40;
+      const sat = NEON? '95%':'78%';
+      // glow
+      const grad = ctx.createRadialGradient(0,0,this.size*0.1, 0,0,this.size*1.2);
+      grad.addColorStop(0, `hsla(${hue},${sat},65%,0.95)`);
+      grad.addColorStop(0.3, `hsla(${hue+20},${sat},55%,0.55)`);
+      grad.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.globalCompositeOperation = 'lighter';
+      ctx.fillStyle = grad; ctx.beginPath(); ctx.arc(0,0,this.size*0.9,0,Math.PI*2); ctx.fill();
+      ctx.globalCompositeOperation = 'source-over';
+      // symbol or shape
+      ctx.fillStyle = `hsl(${hue},${sat},70%)`;
+      ctx.font = `${Math.max(10, this.size)}px serif`;
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText(this.symbol, 0, 0);
+      ctx.restore();
+    }
+  }
+
+  // --- spawn initial things ---
+  function spawnInitial(count = 20){
+    things.length = 0;
+    for (let i=0;i<count;i++){
+      const t = new Thing(Math.random()*W, Math.random()*H);
+      t.size = 12 + Math.random()*36;
+      t.hue = Math.random()*360;
+      things.push(t);
+    }
+  }
+  spawnInitial(22);
+
+  // --- physics & interactions ---
+  let FROZEN = false;
+  let meltdownTriggered = false;
+  let meltdownStart = 0;
+  let meltdownCountdown = 0; // ms left before collapse
+  const MELTDOWN_THRESHOLD = 220; // when total "big size" metric passes this, start countdown
+  const MELTDOWN_COUNTDOWN_MS = 10000; // 10 seconds
+
+  function checkCollisions(){
+    for (let i=0;i<things.length;i++){
+      for (let j=i+1;j<things.length;j++){
+        const A = things[i], B = things[j];
+        const dx = A.x - B.x, dy = A.y - B.y;
+        const dist = Math.hypot(dx,dy);
+        const minDist = (A.size + B.size) * 0.38;
+        if (dist < minDist){
+          // collision event
+          handleCollision(A,B);
+        }
+      }
+    }
+  }
+
+  function handleCollision(A,B){
+    // random spell
+    const r = Math.random();
+    // tiny particle burst
+    for (let k=0;k<6;k++) {
+      particles.push({x:(A.x+B.x)/2 + (Math.random()-0.5)*10, y:(A.y+B.y)/2 + (Math.random()-0.5)*10,
+        vx:(Math.random()-0.5)*3, vy:(Math.random()-0.5)*3, life:300 + Math.random()*400, col: `hsl(${(A.hue+B.hue)/2 + Math.random()*40},85%,65%)`});
+    }
+    // some result types
+    if (r < 0.18){
+      // swap velocities + small chime
+      const tmpx=A.vx; const tmpy=A.vy; A.vx=B.vx; A.vy=B.vy; B.vx=tmpx; B.vy=tmpy;
+      smallChime(820);
+      showMsg('swap',400);
+    } else if (r < 0.36){
+      // slow-mo ripple (time warp)
+      TIME_SCALE = 0.18;
+      smallChime(420);
+      showMsg('time warps',600);
+      setTimeout(()=>TIME_SCALE=1, 600);
+    } else if (r < 0.54){
+      // color invert flash
+      flashInvert(220);
+      smallChime(980);
+      showMsg('colors invert',500);
+    } else if (r < 0.7){
+      // burst growth
+      A.size *= 1.08; B.size *= 1.12;
+      whoosh(180,0.5);
+    } else if (r < 0.86){
+      // one absorbs the other
+      A.size += B.size*0.6; B.size *= 0.6; B.vx += Math.random()*6 - 3;
+      smallChime(600);
+      showMsg('absorption',500);
+    } else {
+      // split both
+      if (things.length < 360) { A.split(); B.split(); }
+      showMsg('splitting',380);
+    }
+  }
+
+  // particles for collisions
+  const particles = [];
+  function stepParticles(dt){
+    for (let i=particles.length-1;i>=0;i--){
+      const p = particles[i];
+      p.x += p.vx * dt * 0.03 * TIME_SCALE;
+      p.y += p.vy * dt * 0.03 * TIME_SCALE;
+      p.life -= dt * TIME_SCALE;
+      if (p.life <= 0) particles.splice(i,1);
+    }
+  }
+  function drawParticles(ctx){
+    for (let p of particles){
+      ctx.globalAlpha = Math.max(0, p.life/700);
+      ctx.fillStyle = p.col;
+      ctx.beginPath(); ctx.arc(p.x, p.y, 2.5 + (1 - (p.life/1000))*3, 0, Math.PI*2); ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  // flash invert effect
+  let invertUntil = 0;
+  function flashInvert(ms=200){
+    invertUntil = performance.now() + ms;
+  }
+
+  // check meltdown condition: aggregate "size energy"
+  function meltdownMetric(){
+    let total = 0;
+    for (const t of things) total += t.size * (1 + t.energy*0.15);
+    return total / 10; // scaled down
+  }
+
+  // --- glitch-collapse sequence ---
+  let collapsing = false;
+  async function startCollapse(){
+    if (collapsing) return;
+    collapsing = true;
+    showMsg('GLITCH COLLAPSE', 1400);
+    ensureAudio(); whoosh(120,1.0);
+    await glitchCollapseAnim();
+    // after collapse, reset environment
+    spawnInitial(16 + Math.floor(Math.random()*24));
+    particles.length = 0;
+    collapsing = false;
+    meltdownTriggered = false;
+    meltdownStart = 0;
+  }
+
+  function captureCanvasTiles(tileSize=32){
+    const cols = Math.ceil(W / tileSize);
+    const rows = Math.ceil(H / tileSize);
+    const tiles = [];
+    const image = ctx.getImageData(0,0,W,H);
+    for (let r=0;r<rows;r++){
+      for (let c=0;c<cols;c++){
+        const x = c*tileSize, y = r*tileSize, w = Math.min(tileSize, W - x), h = Math.min(tileSize, H - y);
+        const data = ctx.getImageData(x,y,w,h);
+        tiles.push({x,y,w,h,data, vx: (Math.random()-0.5)*12, vy:(Math.random()-0.5)*12, rot: Math.random()*6-3, life: 100 + Math.random()*200});
+      }
+    }
+    return tiles;
+  }
+
+  function drawTile(ctx,tile,alpha=1){
+    const {x,y,w,h,data, rot} = tile;
+    ctx.save();
+    ctx.translate(tile.x + tile.w/2, tile.y + tile.h/2);
+    ctx.rotate(tile.rot * Math.PI/180);
+    ctx.globalAlpha = alpha;
+    ctx.putImageData(tile.data, -tile.w/2, -tile.h/2);
+    ctx.restore();
+    ctx.globalAlpha = 1;
+  }
+
+  function glitchCollapseAnim(){
+    return new Promise(resolve => {
+      const tiles = captureCanvasTiles(32);
+      const start = performance.now();
+      const DURATION = 1600;
+      // animate tiles outward & rotation then fade
+      function frame(){
+        const now = performance.now();
+        const t = (now - start) / DURATION;
+        ctx.clearRect(0,0,W,H);
+        // background smear
+        ctx.fillStyle = `hsl(${(now/40)%360},100%,6%)`;
+        ctx.fillRect(0,0,W,H);
+        for (let tile of tiles){
+          tile.x += tile.vx * (1 + Math.sin(t*Math.PI*2)*0.6);
+          tile.y += tile.vy * (1 + Math.cos(t*Math.PI*2)*0.6);
+          tile.rot += (tile.vx+tile.vy) * 0.02;
+          const alpha = 1 - t - (Math.abs(tile.x - W/2)+Math.abs(tile.y - H/2))/(W+H);
+          ctx.save();
+          ctx.globalAlpha = Math.max(0, alpha);
+          ctx.translate(tile.x + tile.w/2, tile.y + tile.h/2);
+          ctx.rotate(tile.rot * Math.PI/180);
+          ctx.putImageData(tile.data, -tile.w/2, -tile.h/2);
+          ctx.restore();
+        }
+        if (t < 1){
+          requestAnimationFrame(frame);
+        } else {
+          // fade to black pulse
+          const pulseStart = performance.now();
+          const pulseDur = 400;
+          (function pulse(){
+            const pnow = performance.now();
+            const pt = (pnow - pulseStart) / pulseDur;
+            ctx.fillStyle = `rgba(0,0,0,${Math.min(1, pt)})`;
+            ctx.fillRect(0,0,W,H);
+            if (pt < 1) requestAnimationFrame(pulse);
+            else resolve();
+          })();
+        }
+      }
+      requestAnimationFrame(frame);
+    });
+  }
+
+  // --- user interaction: clicks spawn things, keys ---
+  addEventListener('click', (e) => {
+    ensureAudio();
+    smallChime(800); whoosh(180,0.5);
+    for (let i=0;i<4;i++) things.push(new Thing(e.clientX + (Math.random()-0.5)*20, e.clientY + (Math.random()-0.5)*20));
+  });
+
+  addEventListener('keydown', (ev) => {
+    ensureAudio();
+    const k = ev.key.toLowerCase();
+    if (k === 'm'){ MELTDOWN_AUTO = !MELTDOWN_AUTO; showMsg(MELTDOWN_AUTO? 'AUTO MELTDOWN ON':'AUTO MELTDOWN OFF',1000); }
+    if (k === 'v'){ NEON = !NEON; showMsg(NEON? 'NEON BOOST' : 'NEON OFF',700); }
+    if (k === 'c'){ things.length=0; particles.length=0; showMsg('cleared',700); }
+    if (k === 'r'){ spawnInitial(22); showMsg('reborn',700); }
+    if (k === 's'){ TIME_SCALE = 0.22; setTimeout(()=> TIME_SCALE = 1, 2200); showMsg('slow time',700); }
+    if (k === 'e'){ for (let i=0;i<6;i++){ const t = new Thing(Math.random()*W, Math.random()*H); t.size *= 1.2; things.push(t);} showMsg('evolution burst',900); smallChime(920); }
+    // ensure audio started for keyboard interactions
+    if (!audioCtx) ensureAudio();
+  });
+
+  // hold S: slow while held down
+  addEventListener('keydown', (ev)=>{ if (ev.key.toLowerCase()==='s'){ TIME_SCALE = 0.22; }});
+  addEventListener('keyup', (ev)=>{ if (ev.key.toLowerCase()==='s'){ TIME_SCALE = 1; }});
+
+  // --- main loop ---
+  let last = performance.now();
+  function loop(now){
+    const dt = Math.max(8, now - last);
+    last = now;
+    if (invertUntil > now){
+      // invert colors quickly by drawing into offscreen then inverting: simplified approach -> overlay blend
+      ctx.save();
+      ctx.fillStyle = `hsl(${(now/30)%360},95%,12%)`;
+      ctx.fillRect(0,0,W,H);
+      ctx.restore();
+    } else {
+      // psychedelic gradient background that slowly shifts
+      const g = ctx.createLinearGradient(0,0,W,H);
+      const base = (now/60) % 360;
+      g.addColorStop(0, `hsl(${base},95%,6%)`);
+      g.addColorStop(0.35, `hsl(${base+60},85%,12%)`);
+      g.addColorStop(0.7, `hsl(${base+140},92%,10%)`);
+      g.addColorStop(1, `hsl(${base+220},90%,8%)`);
+      ctx.fillStyle = g;
+      ctx.fillRect(0,0,W,H);
+    }
+
+    // update & draw
+    if (!FROZEN && !collapsing){
+      for (const t of things) t.step(dt);
+      checkCollisions();
+    }
+
+    // draw things (sorted by size for cool overlap)
+    things.sort((a,b)=>a.size - b.size);
+    for (const t of things) t.draw(ctx);
+    // draw particles
+    stepParticles(dt); drawParticles(ctx);
+
+    // post-check meltdown metric
+    const metric = meltdownMetric();
+    if (metric > MELTDOWN_THRESHOLD && MELTDOWN_AUTO && !meltdownTriggered && !collapsing){
+      meltdownTriggered = true;
+      meltdownStart = performance.now();
+      meltdownCountdown = MELTDOWN_COUNTDOWN_MS;
+      showMsg('meltdown initiated', 1500);
+    }
+    if (meltdownTriggered && !collapsing){
+      const elapsed = now - meltdownStart;
+      const remaining = Math.max(0, MELTDOWN_COUNTDOWN_MS - elapsed);
+      // visual warn overlay pulse
+      ctx.save();
+      const warnAlpha = 0.12 + 0.08 * Math.sin((elapsed/100)*Math.PI*2);
+      ctx.fillStyle = `rgba(255,40,120,${warnAlpha})`;
+      ctx.fillRect(0,0,W,H);
+      ctx.restore();
+      // show countdown small
+      ctx.save(); ctx.fillStyle = 'rgba(255,255,255,0.9)'; ctx.font='18px monospace'; ctx.fillText('Collapse in: ' + Math.ceil(remaining/1000) + 's', 18, H-26); ctx.restore();
+      if (elapsed >= MELTDOWN_COUNTDOWN_MS){
+        // trigger collapse
+        startCollapse();
+      }
+    }
+
+    // auto-fade big stuff: when too many huge things, gradually dim them & reset after ~10s of collapse state handled above
+    // ensure things never grow unbounded: cap sizes slightly and create shedding
+    for (let i=things.length-1;i>=0;i--){
+      const t = things[i];
+      if (t.size > 420){ // critical => start immediate collapse seconds
+        t.size *= 0.98;
+        // spawn particle madness
+        for (let k=0;k<4;k++) particles.push({x:t.x + (Math.random()-0.5)*20, y:t.y + (Math.random()-0.5)*20, vx:(Math.random()-0.5)*8, vy:(Math.random()-0.5)*8, life:200 + Math.random()*600, col:`hsl(${t.hue},90%,60%)`});
+      }
+      if (t.size > 900) { // emergency clear if too huge
+        things.splice(i,1);
+      }
+    }
+
+    // ephemeral weird captions
+    if (Math.random() < 0.001 && !collapsing) showMsg(randomChoice([
+      "Do not feed the sigils.", "It watches calmly.", "They like your taste.", "Critical mass approaching.",
+      "A gentle hum.", "They remember a song."
+    ]), 2000);
+
+    requestAnimationFrame(loop);
+  }
+  requestAnimationFrame(loop);
+
+  // --- utilities ---
+  function randomChoice(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+
+  // --- initial ambient start on first mouse move (autoplay policy) ---
+  addEventListener('mousemove', function firstAudio(){ if (!audioCtx) ensureAudio(); removeEventListener('mousemove', firstAudio); });
+
+  // --- spawn a slow trickle of new things to keep it alive ---
+  setInterval(()=>{ if (!collapsing) { if (Math.random() < 0.6) things.push(new Thing()); if (things.length > 420) things.splice(0, things.length - 420); } }, 900);
+
+  // Expose for debug
+  window.__psy = { things, particles, startCollapse, spawnInitial };
+
+})();
+</script>
+</body>
+</html>
