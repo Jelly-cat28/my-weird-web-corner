@@ -1,0 +1,404 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Poems — By Chloe</title>
+<style>
+  :root{
+    --bg1:#0b0f2a; --bg2:#28123a;
+    --accent:#ffb3ff; --muted:#cfcfe6;
+  }
+  html,body{height:100%;margin:0;font-family:"Courier New",monospace;background:
+    radial-gradient(1200px 600px at 10% 10%, rgba(255,179,255,0.03), transparent),
+    linear-gradient(180deg,var(--bg1),var(--bg2));
+    color:var(--muted);
+  }
+
+  /* page layout */
+  .wrap{
+    max-width:900px;
+    margin:48px auto;
+    padding:28px;
+    box-sizing:border-box;
+  }
+
+  header{
+    display:flex;
+    gap:12px;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:18px;
+  }
+  h1{margin:0;font-size:1.35rem;color:var(--accent);letter-spacing:1px}
+  .controls{
+    display:flex; gap:8px; align-items:center;
+  }
+  button{
+    background:transparent;
+    color:var(--accent);
+    border:1px solid rgba(255,179,255,0.12);
+    padding:8px 10px;
+    border-radius:8px;
+    cursor:pointer;
+    font-family:monospace;
+  }
+  button:hover{background:rgba(255,179,255,0.05)}
+  .small{padding:6px 8px;font-size:0.9rem}
+
+  /* typing area */
+  .card{
+    background: rgba(10,8,18,0.55);
+    border:1px solid rgba(255,179,255,0.06);
+    border-radius:14px;
+    padding:28px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.45);
+  }
+
+  .meta{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:12px;
+    margin-bottom:12px;
+  }
+  .meta .title{font-weight:bold;color:#ffd3ff}
+  .meta .subtitle{font-size:0.9rem;color:#d9cfe6}
+
+  /* story box */
+  #poemBox{
+    max-height:60vh;
+    overflow:auto;
+    padding:18px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.00));
+    border-radius:10px;
+    font-size:1.05rem;
+    line-height:1.62;
+    color:#fff;
+    white-space:pre-wrap; /* preserve line breaks */
+    letter-spacing:0.2px;
+  }
+
+  /* blinking cursor */
+  .cursor {
+    display:inline-block;
+    width:10px;
+    margin-left:3px;
+    background:var(--accent);
+    animation: blink 1s steps(2, start) infinite;
+    vertical-align:middle;
+    height:1.1em;
+    border-radius:2px;
+  }
+  @keyframes blink{50%{opacity:0}}
+
+  /* small footer */
+  footer{
+    margin-top:12px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    color:#cfcfe6;
+    font-size:0.9rem;
+  }
+  input[type=range]{accent-color: #ffb3ff; width:140px}
+  a.menu {
+    color:var(--accent);
+    text-decoration:none;
+    border:1px solid rgba(255,179,255,0.08);
+    padding:6px 10px;
+    border-radius:8px;
+  }
+  a.menu:hover{background:rgba(255,179,255,0.04)}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>poems</h1>
+      <div class="controls">
+        <button id="prevBtn" title="Previous poem">◀ Prev</button>
+        <button id="playBtn" class="small" title="Play / Pause">Play</button>
+        <button id="skipBtn" title="Skip to full">Skip</button>
+        <button id="nextBtn" title="Next poem">Next ▶</button>
+        <label style="display:flex;align-items:center;gap:8px;margin-left:8px;color:#dcd6ee;font-size:0.95rem">
+          Speed
+          <input id="speedRange" type="range" min="10" max="160" value="60">
+        </label>
+      </div>
+    </header>
+
+    <div class="card">
+      <div class="meta">
+        <div>
+          <div class="title" id="poemTitle">—</div>
+          <div class="subtitle" id="poemSub">—</div>
+        </div>
+        <div style="opacity:0.9;font-size:0.9rem">
+          <span id="progress">0 / 0</span>
+        </div>
+      </div>
+
+      <div id="poemBox" aria-live="polite" aria-atomic="false"></div>
+      <div style="height:10px"></div>
+      <div style="display:flex;gap:10px;align-items:center;justify-content:space-between">
+        <div style="color:#d8cdf0;font-size:0.95rem">Tip: press Space to pause / resume • ← → to change poems</div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <button id="restartBtn" class="small">Restart</button>
+          <a class="menu" href="gamesmenu.html">Back to The Game Menu</a>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <div style="opacity:0.85">made by you — soft, slow & odd</div>
+      <div style="opacity:0.75">you can click Skip to reveal the poem instantly</div>
+    </footer>
+  </div>
+
+<script>
+/* ---------- poems (exact text you shared) ---------- */
+const poems = [
+`❖ 1. drifting between almost-real❖
+I drift between the almost-real
+i wake inside a thought
+ still warm from dreaming
+ half-finished, half-true,
+ a scene i swear i lived through,
+ only to find it scattered
+ like dust when the morning moves.
+there’s that soft hour
+ where memory feels borrowed,
+ threadbare
+ but familiar enough to follow.
+ i reach for something
+ i felt a moment ago
+ a touch, a task,
+ a tiny echo—
+ and my hand closes on nothing
+ but the ghost of before.
+still, i linger.
+ the air is quiet here,
+ thin as folded sighs,
+ a hush shaped like déjà vu.
+ longing curls around me
+ for what, i don’t know,
+ but i know the feeling,
+ and that’s close enough.
+i drift in and out
+ like a tide too tired to choose,
+ and when I finally rise,
+ the world feels twice-lived
+ twice-felt
+ twice-new.`,
+
+`❖2. soft missteps❖
+the day unfolds
+in crooked choreography
+one misstep nudging the next,
+small accidents weaving themselves
+into something almost rhythmic.
+i move forward,
+then back,
+then forward again
+no metaphor,
+just the literal loop
+of living a life
+that doesn’t walk in straight lines.
+conversations brush past me,
+songs cling to the edges of thought,
+stories echo in my head
+with characters who survive
+by drifting off reality
+and i understand them
+a little too well.
+things slip out of place,
+hide, return,
+twist themselves silly
+only to reappear in my hand
+like, surprise,
+you weren’t wrong,
+just looking differently.
+i sigh,
+laugh,
+shrug
+tiny rituals of being
+a person who’s trying,
+even when the timing
+never quite matches the world.
+traffic slows,
+moments tangle,
+the day nudges me forward
+in its uneven rhythm,
+and somehow
+i end up right where i’m meant to be
+a little late,
+a little embarrassed,
+but wholly, quietly myself.
+tomorrow will come
+in its own lopsided rhyme,
+and i’ll meet it again—
+not perfectly,
+but honestly,
+which is close enough
+to meaning something.`,
+
+`❖ 3. the quiet world ❖
+The world
+The quiet world
+It  aches
+and outside, the sky unravels
+ drop by drop
+the air thickens,
+ heavy with wet light,
+ a weight that clings
+ to the edges of thought.
+ a car growls by,
+ too big, too bright,
+ breaking the almost-silence
+The one i’ve been holding 
+like a fragile thread.
+my footsteps tap
+ their soft percussion
+ on the wet pavement
+ a pulse
+a beat,
+ a reminder
+ that i exist in this moving street,
+ that this body
+ belongs to this moment.
+but existence carries
+ its quiet ache—
+ a sadness that doesn’t shout,
+ just settles,
+ like the hush after rain.
+ it presses gently,
+ a hand on the shoulder,
+ saying,
+ yes, you’re here,
+ and somehow that truth
+ is both comfort and bruise.
+still, i walk.
+ still, the world hums.
+ still, the heaviness feels
+ almost like home.` ];
+
+let idx = 0;                // current poem index
+let speed = 60;            // ms delay per character (lower = faster)
+let playing = false;
+let charPointer = 0;
+let currentText = "";
+let timer = null;
+
+/* DOM refs */
+const box = document.getElementById('poemBox');
+const titleEl = document.getElementById('poemTitle');
+const subEl = document.getElementById('poemSub');
+const progressEl = document.getElementById('progress');
+const playBtn = document.getElementById('playBtn');
+const speedRange = document.getElementById('speedRange');
+
+/* set initial speed slider -> mapping: slider value is delay ms */
+speedRange.addEventListener('input', (e) => {
+  speed = Number(e.target.value);
+});
+
+/* keyboard shortcuts */
+window.addEventListener('keydown', (e) => {
+  if (e.code === 'Space') { e.preventDefault(); togglePlay(); }
+  if (e.key === 'ArrowRight') nextPoem();
+  if (e.key === 'ArrowLeft') prevPoem();
+});
+
+/* control buttons */
+document.getElementById('nextBtn').addEventListener('click', nextPoem);
+document.getElementById('prevBtn').addEventListener('click', prevPoem);
+document.getElementById('restartBtn').addEventListener('click', restartPoem);
+document.getElementById('skipBtn').addEventListener('click', skipToFull);
+playBtn.addEventListener('click', togglePlay);
+
+/* helpers */
+function loadPoem(i){
+  idx = (i + poems.length) % poems.length;
+  currentText = poems[idx];
+  charPointer = 0;
+  box.textContent = "";         // clear displayed text
+  updateMeta();
+  updateProgress();
+}
+
+function updateMeta(){
+  // simple title/sub from first line (if present)
+  const firstLine = currentText.split('\\n')[0] || '';
+  titleEl.textContent = firstLine || `poem ${idx+1}`;
+  subEl.textContent = `poem ${idx+1} of ${poems.length}`;
+}
+
+function updateProgress(){
+  progressEl.textContent = `${(Math.min(charPointer, currentText.length))} / ${currentText.length}`;
+}
+
+function stepType(){
+  if (charPointer >= currentText.length){
+    stopPlay();
+    return;
+  }
+  // take next character
+  const ch = currentText.charAt(charPointer);
+  box.textContent += ch;
+  charPointer++;
+  // auto-scroll poemBox to keep latest line visible
+  box.scrollTop = box.scrollHeight - box.clientHeight;
+  updateProgress();
+  // schedule next
+  timer = setTimeout(stepType, Math.max(6, speed));
+}
+
+/* play/pause controls */
+function togglePlay(){
+  if (playing) stopPlay(); else startPlay();
+}
+function startPlay(){
+  if (charPointer >= currentText.length){
+    // restart from beginning if reached end
+    charPointer = 0; box.textContent = "";
+  }
+  playing = true;
+  playBtn.textContent = 'Pause';
+  stepType();
+}
+function stopPlay(){
+  playing = false;
+  playBtn.textContent = 'Play';
+  if (timer) { clearTimeout(timer); timer = null; }
+}
+
+/* poem navigation */
+function nextPoem(){
+  loadPoem(idx + 1);
+  stopPlay();
+}
+function prevPoem(){
+  loadPoem(idx - 1);
+  stopPlay();
+}
+function restartPoem(){
+  charPointer = 0;
+  box.textContent = "";
+  stopPlay();
+}
+function skipToFull(){
+  stopPlay();
+  box.textContent = currentText;
+  charPointer = currentText.length;
+  box.scrollTop = box.scrollHeight;
+  updateProgress();
+}
+
+/* initialize first poem */
+loadPoem(0);
+
+/* optional: autoplay first poem after small delay? no — wait for user */
+</script>
+</body>
+</html>
