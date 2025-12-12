@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Ledger — Page 1</title>
+<style>
+:root{--neon:#00ff66;--bg:#000}
+html,body{height:100%;margin:0;background:var(--bg);color:var(--neon);font-family:"Courier New",monospace}
+.container{padding:36px;box-sizing:border-box;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.scene{max-width:900px;white-space:pre-wrap;line-height:1.6;font-size:1.05rem;opacity:1}
+.word{opacity:0;transition:opacity .12s linear}
+.cursor{display:inline-block;width:10px;height:1.1em;background:var(--neon);vertical-align:middle;margin-left:4px;animation:blink 1s steps(2,start) infinite}
+@keyframes blink{50%{opacity:0}}
+.nav{position:fixed;top:14px;right:14px;z-index:30}
+.nav a{color:var(--neon);text-decoration:none;border:1px solid var(--neon);padding:6px 10px;border-radius:8px;background:rgba(0,255,102,0.04);margin-left:8px;font-weight:700}
+.controls{margin-top:20px;display:flex;gap:12px}
+.btn{padding:0.6em 0.9em;border-radius:8px;border:1px solid var(--neon);background:transparent;color:var(--neon);cursor:pointer}
+.btn[disabled]{opacity:.35;cursor:default}
+</style>
+</head>
+<body>
+<div class="nav">
+  <a href="index.html">← Menu</a>
+  <a href="unlock.html">Unlock</a>
+</div>
+
+<div class="container">
+  <div id="scene" class="scene" aria-live="polite"></div>
+  <div class="controls">
+    <a id="prev" class="btn" href="index.html">Prev</a>
+    <button id="nextBtn" class="btn" disabled>Next →</button>
+  </div>
+</div>
+
+<script>
+/* redirect to unlock if locked */
+const UNLOCK_KEY = "ledger_unlocked_v1";
+if(!localStorage.getItem(UNLOCK_KEY)){ location.href = "unlock.html"; }
+
+// ---- page text (long, expanded) ----
+const pageText = `Record Entry 001: Temporal Coordinates 0–4.7e9
+
+It has become increasingly clear that humans overestimate their importance in both temporal and spatial scales.
+Standing back from daily noise, the picture simplifies: we are a small biological occurrence on a small rock in a minor corner of an unremarkable galaxy.
+
+Our actions feel loud because we live inside them. That’s proximity bias, not meaning.
+The civilizations we build seem permanent because we don’t outlive them.
+But viewed from the outside, from the perspective of geological or cosmic time, almost nothing we do registers as more than a temporary rearrangement of matter.
+
+This isn’t depressing.
+It’s just accurate.
+
+When you understand this, the pressure drops.
+You see that “good” and “evil” are labels we invented to keep order within the species.
+They don’t exist beyond us, and they never did.
+The universe doesn’t reward kindness, nor punish cruelty.
+It simply records motion, then erases it with time.
+
+What you choose to do is therefore neither sacred nor doomed.
+It’s just yours.
+And if it feels okay to you—
+that’s enough, because “okay” is just another human-made signal in the mind.
+A chemical stamp of approval.
+A quiet permission slip to continue.
+`;
+
+// ---- sequential flicker reveal implementation ----
+const container = document.getElementById('scene');
+const nextBtn = document.getElementById('nextBtn');
+
+function prepareWords(text){
+  const words = text.replace(/\r/g,'').split(/\s+/);
+  container.innerHTML = '';
+  words.forEach((w, i) => {
+    const sp = document.createElement('span');
+    sp.className = 'word';
+    sp.textContent = w + (i < words.length-1 ? ' ' : '');
+    container.appendChild(sp);
+  });
+  // append cursor while typing
+  const cur = document.createElement('span'); cur.className='cursor'; cur.id='cursorEl';
+  container.appendChild(cur);
+  return Array.from(container.querySelectorAll('.word'));
+}
+
+async function flickerIn(words){
+  for(let i=0;i<words.length;i++){
+    await flickerWord(words[i]);
+    // small, variable delay between words for natural pace
+    await wait(30 + Math.random()*110);
+  }
+}
+
+function flickerWord(el){
+  return new Promise(res => {
+    let flicks = 6 + Math.floor(Math.random()*10);
+    const tick = setInterval(() => {
+      el.style.opacity = (Math.random() > 0.5 ? '1' : '0');
+      flicks--;
+      if(flicks <= 0){
+        clearInterval(tick);
+        el.style.opacity = '1';
+        res();
+      }
+    }, 60);
+  });
+}
+
+function wait(ms){ return new Promise(r=>setTimeout(r,ms)); }
+
+(async function run(){
+  const words = prepareWords(pageText);
+  // reveal words sequentially
+  await wait(500);
+  await flickerIn(words);
+  // remove cursor
+  const c = document.getElementById('cursorEl'); if(c) c.remove();
+  // pause 10s then enable Next
+  await wait(10000);
+  nextBtn.disabled = false;
+})();
+
+nextBtn.addEventListener('click', ()=> location.href = "page2.html");
+</script>
+</body>
+</html>
