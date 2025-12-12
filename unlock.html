@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Unlock — Cosmic Ledger</title>
+<style>
+  :root{--neon:#00ff66;--bg:#000}
+  html,body{height:100%;margin:0;background:var(--bg);color:var(--neon);font-family: "Courier New", monospace;display:flex;align-items:center;justify-content:center}
+  .box{width:min(720px,94%);background:rgba(0,0,0,0.85);border:1px solid rgba(0,255,102,0.08);padding:28px;border-radius:12px;text-align:center;box-shadow:0 8px 30px rgba(0,0,0,0.6)}
+  input{width:70%;padding:0.6em;border-radius:8px;border:1px solid var(--neon);background:#000;color:var(--neon);font-family:monospace;font-size:1rem}
+  button{padding:0.55em 0.9em;margin-left:8px;border-radius:8px;border:1px solid var(--neon);background:transparent;color:var(--neon);cursor:pointer;font-weight:700}
+  button:hover{background:var(--neon);color:#000}
+  .small{opacity:.85;margin-top:12px;font-size:.94rem}
+</style>
+</head>
+<body>
+  <div class="box" role="dialog" aria-modal="true">
+    <h2 style="margin:0 0 8px">Access:Ledger</h2>
+    <div>Enter access code to unlock the ledger (local only).</div>
+    <div style="margin-top:14px;">
+      <input id="pw" type="password" placeholder="access code" autocomplete="off" />
+      <button id="ok">Unlock</button>
+    </div>
+    <div class="small">If correct, you will be able to open the ledger pages.</div>
+    <div class="small" style="opacity:.5;margin-top:8px">Hint: the password in this demo is <code>nihilism</code></div>
+  </div>
+
+<script>
+  // change this if you want a different password
+  const CORRECT = "nihilism";
+  const KEY = "ledger_unlocked_v1";
+
+  const pw = document.getElementById('pw');
+  const ok = document.getElementById('ok');
+
+  ok.addEventListener('click', tryIt);
+  pw.addEventListener('keydown', e => { if(e.key === 'Enter') tryIt(); });
+
+  function tryIt(){
+    if(pw.value === CORRECT){
+      localStorage.setItem(KEY, "1");
+      // small confirmation then go to page1
+      ok.textContent = "Unlocked ✓";
+      setTimeout(()=> location.href = "page1.html", 400);
+    } else {
+      alert("Incorrect code.");
+      pw.value = "";
+    }
+  }
+</script>
+</body>
+</html>
