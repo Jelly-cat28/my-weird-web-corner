@@ -2,20 +2,20 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MySpace</title>
-
 <style>
-/* ---------- PAGE BACKGROUND ---------- */
-body, html {
+/* ===== GLOBAL VIBE ===== */
+html, body {
   margin: 0;
   padding: 0;
-  min-height: 100vh;
-  font-family: Arial, sans-serif;
-  background-color: black;
-  color: black;
+  background-color: #000;
+  color: #000;
+  font-family: Verdana, Arial, sans-serif;
+  cursor: url('https://cur.cursors-4u.net/symbols/sym-1/sym46.cur'), auto;
+}
 
-  /* RIGHT-SIDE COLLAGE */
+/* ===== RIGHT-SIDE COLLAGE ===== */
+body {
   background-image:
     url('https://i.pinimg.com/736x/80/45/08/80450879d7a66fb6ebca701006a60508.jpg'),
     url('https://th.bing.com/th/id/OIP.TwrywoPbXoiwNY_UB1W5gAHaNK?o=7rm=3&rs=1&pid=ImgDetMain&o=7&rm=3'),
@@ -27,60 +27,53 @@ body, html {
     right 25%,
     right 50%,
     right 75%;
-  background-size: 45vw auto;
+  background-size: 48vw auto;
 }
 
-/* ---------- MAIN CONTAINER ---------- */
-.main-container {
-  width: 950px;
-  margin: 20px 0 20px 40px; /* LEFT aligned */
-  background: white;
-  border: 3px solid #888;
+/* ===== MAIN CONTAINER ===== */
+.main {
+  width: 960px;
+  margin: 20px 0 40px 30px;
+  background: #fff;
+  border: 3px ridge #999;
 }
 
-/* ---------- HEADER ---------- */
 .header {
-  background: #ececec;
-  padding: 10px;
-  font-size: 30px;
+  background: linear-gradient(#f2f2f2, #d6d6d6);
+  font-size: 32px;
   font-weight: bold;
-  color: #333;
+  padding: 10px;
 }
 
-/* ---------- TABLE LAYOUT ---------- */
-table {
-  width: 100%;
-  border-collapse: collapse;
-}
+/* ===== TABLE LAYOUT ===== */
+table { width: 100%; border-collapse: collapse; }
+.left { width: 230px; background: #f8f8f8; vertical-align: top; }
+.right { vertical-align: top; padding: 10px; }
 
-.left-col {
-  width: 220px;
-  background: #f6f6f6;
-  vertical-align: top;
-}
-
-.content-col {
-  padding: 15px;
-  vertical-align: top;
-}
-
-/* ---------- BOXES ---------- */
+/* ===== BOXES ===== */
 .box {
-  border: 2px solid #bbb;
+  border: 2px outset #bbb;
   margin: 8px;
   padding: 6px;
-  background: #fff;
-  font-size: 14px;
+  font-size: 13px;
 }
 
 .box h3 {
+  font-size: 14px;
   margin: 0 0 6px;
-  font-size: 15px;
-  border-bottom: 1px dotted #aaa;
+  background: #eee;
 }
 
-/* ---------- FRIENDS ---------- */
-.top8-box {
+/* ===== PROFILE PIC ===== */
+.pfp {
+  width: 160px;
+  height: 160px;
+  object-fit: cover;
+  border: 3px double #555;
+}
+
+/* ===== FRIENDS ===== */
+.friends {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
@@ -89,137 +82,115 @@ table {
 .friend {
   width: 80px;
   height: 80px;
-  border: 2px solid #555;
-  background: linear-gradient(135deg, #ffe6f2, #e6f0ff);
-  text-align: center;
   font-size: 10px;
-  font-weight: bold;
-  padding: 4px;
+  text-align: center;
+  border: 2px solid #333;
+  background: repeating-linear-gradient(45deg,#ffe6f2,#ffe6f2 5px,#e6f0ff 5px,#e6f0ff 10px);
 }
 
-/* ---------- MUSIC ---------- */
-.play-button {
-  display: inline-block;
-  padding: 8px 14px;
-  background: #ff0000;
+/* ===== MUSIC ===== */
+.play {
+  background: red;
   color: white;
-  font-weight: bold;
+  padding: 6px 10px;
   cursor: pointer;
-  border-radius: 6px;
   font-size: 12px;
 }
 
-/* ---------- VERY MYSPACE ---------- */
-marquee {
-  font-size: 12px;
-  color: hotpink;
-}
+/* ===== MARQUEE + BLINK ===== */
+marquee { color: hotpink; font-size: 12px; }
 
-.blink {
-  animation: blink 1s steps(1) infinite;
-}
+.blink { animation: blink 1s infinite; }
+@keyframes blink { 50% { opacity: 0; } }
 
-@keyframes blink {
-  50% { opacity: 0; }
-}
-
-/* ---------- COMMENTS ---------- */
+/* ===== COMMENTS ===== */
 .comment {
+  border-top: 1px dashed #aaa;
   font-size: 12px;
-  border-top: 1px dashed #ccc;
-  padding: 6px 0;
+  padding: 4px 0;
+}
+
+/* ===== SCROLL BOX ===== */
+.scrollbox {
+  height: 120px;
+  overflow-y: scroll;
+  border: 1px inset #aaa;
+  padding: 4px;
 }
 </style>
 </head>
-
 <body>
 
-<div class="main-container">
-  <div class="header">MySpace</div>
+<div class="main">
+  <div class="header">MySpace ✧✧✧</div>
 
   <table>
     <tr>
       <!-- LEFT COLUMN -->
-      <td class="left-col">
-
+      <td class="left">
         <div class="box" style="text-align:center;">
-          <img src="https://i.pinimg.com/originals/55/bc/5e/55bc5eea05e85026e81d887ac4c1b644.jpg"
-               style="width:160px;height:160px;object-fit:cover;border:2px solid #555;">
-          <div style="font-size:11px;opacity:0.7;">★ Oshi no Ko fanart ★</div>
+          <img class="pfp" src="https://i.pinimg.com/originals/55/bc/5e/55bc5eea05e85026e81d887ac4c1b644.jpg">
+          <div style="font-size:11px;">★ Oshi no Ko fanart ★</div>
         </div>
 
-        <div class="box">
-          <b>Status:</b><br>
-          feeling nostalgic ✧ online ✧ coding
-        </div>
-
-        <div class="box">
-          <b>Mood:</b> ✨ dreamy but unhinged ✨
-        </div>
+        <div class="box"><b>Status:</b><br> online • nostalgic • coding</div>
+        <div class="box"><b>Mood:</b> dreamy but feral</div>
 
         <div class="box">
           <h3>Music</h3>
-          <div id="musicArea">
-            <span class="play-button" onclick="startVideo()">▶ Play Song</span>
-          </div>
+          <div id="music"><span class="play" onclick="playSong()">▶ play</span></div>
         </div>
 
         <div class="box">
           <h3>Top Friends</h3>
-          <div class="top8-box">
-            <div class="friend">Mckenna 💖✧</div>
-            <div class="friend">Krishivaa ✰💫</div>
-            <div class="friend">Deanna 🌟❤️</div>
-            <div class="friend">You Yi ✩💗</div>
-            <div class="friend">Layla 🌙✨</div>
-            <div class="friend">Matilda 🌼💛</div>
-            <div class="friend">Anran 💜⭐</div>
-            <div class="friend">Sienna ❤🌸</div>
+          <div class="friends">
+            <div class="friend">.ੈ✩‧₊˚ Mckenna ˚₊‧✩*ੈ.</div>
+            <div class="friend">.ੈ✩‧₊˚ Krishivaa ˚₊‧✩*ੈ.</div>
+            <div class="friend">.ੈ✩‧₊˚ Deanna ˚₊‧✩*ੈ.</div>
+            <div class="friend">.ੈ✩‧₊˚ You Yi ˚₊‧✩*ੈ.</div>
+            <div class="friend">.ੈ✩‧₊˚ Layla ˚₊‧✩*ੈ.</div>
+            <div class="friend">.ੈ✩‧₊˚ Matilda ˚₊‧✩*ੈ.</div>
+            <div class="friend">.ੈ✩‧₊˚ Anran ˚₊‧✩*ੈ.</div>
+            <div class="friend">.ੈ✩‧₊˚ Sienna ˚₊‧✩*ੈ.</div>
           </div>
         </div>
 
+        <div class="box"><span class="blink">Profile Views:</span> 12,487</div>
       </td>
 
-      <!-- MAIN CONTENT -->
-      <td class="content-col">
-
-        <marquee scrollamount="4">
-          ★ welcome to my profile ★ don’t steal my layout ★
-        </marquee>
+      <!-- RIGHT COLUMN -->
+      <td class="right">
+        <marquee scrollamount="4">★ welcome to my profile ★ it's nice to see you again ★</marquee>
 
         <div class="box">
           <h3>About Me</h3>
-          Just a curious soul exploring internet art, music, and code.<br>
-          I like weird websites, quiet sadness, glitter, and things that feel
-          like they shouldn’t exist anymore but somehow do.
+          curious soul exploring internet art, music, and code.<br>
+          likes things that flicker, feel unreal, or shouldn't exist anymore.
         </div>
 
         <div class="box">
           <h3>Interests</h3>
-          ✦ coding weird pages<br>
-          ✦ manga + fanart<br>
-          ✦ internet nostalgia<br>
-          ✦ ambient music<br>
-          ✦ everything else cool<br>
+          ✦ weird websites<br>✦ manga fanart<br>✦ ambient music<br>✦ nostalgia<br>✦ liminal vibes
         </div>
 
         <div class="box">
-          <h3>Who I’d Like to Meet</h3>
-          people who understand the vibe without explaining it
+          <h3>Who I'd Like to Meet</h3>
+          people who understand the vibe without explanation
         </div>
 
+
+        <div class="box"><span class="blink">Last Login:</span> moments ago</div>
       </td>
     </tr>
   </table>
 </div>
 
 <script>
-function startVideo() {
-  document.getElementById('musicArea').innerHTML = `
+function playSong() {
+  document.getElementById('music').innerHTML = `
     <iframe width="180" height="100"
       src="https://www.youtube.com/embed/U2mSRPo8MTg?autoplay=1"
-      allow="autoplay">
-    </iframe>`;
+      allow="autoplay"></iframe>`;
 }
 </script>
 
