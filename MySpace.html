@@ -2,195 +2,198 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MySpace</title>
 <style>
-/* ===== GLOBAL VIBE ===== */
-html, body {
-  margin: 0;
-  padding: 0;
-  background-color: #000;
-  color: #000;
+/* --- Background Tiles --- */
+body, html {
+  margin:0;
+  padding:0;
   font-family: Verdana, Arial, sans-serif;
-  cursor: url('https://cur.cursors-4u.net/symbols/sym-1/sym46.cur'), auto;
+  background-color: black;
+  height:100%;
+  background:
+    url('https://i.pinimg.com/736x/80/45/08/80450879d7a66fb6ebca701006a60508.jpg') left top repeat-y,
+    url('https://th.bing.com/th/id/OIP.TwrywoPbXoiwNY_UB1W5gAHaNK?o=7rm=3&rs=1&pid=ImgDetMain&o=7&rm=3') left 25% top repeat-y,
+    url('https://i.pinimg.com/736x/0a/29/b8/0a29b8917c4f64df5989c5142835bd32.jpg') left 50% top repeat-y,
+    url('https://i.pinimg.com/originals/bd/99/36/bd9936fad54aedd761e4c899391c0310.jpg') left 75% top repeat-y;
+  background-size:25% auto;
+  background-attachment:fixed;
+  color:#fff;
 }
 
-/* ===== RIGHT-SIDE COLLAGE ===== */
-body {
-  background-image:
-    url('https://i.pinimg.com/736x/80/45/08/80450879d7a66fb6ebca701006a60508.jpg'),
-    url('https://th.bing.com/th/id/OIP.TwrywoPbXoiwNY_UB1W5gAHaNK?o=7rm=3&rs=1&pid=ImgDetMain&o=7&rm=3'),
-    url('https://i.pinimg.com/736x/0a/29/b8/0a29b8917c4f64df5989c5142835bd32.jpg'),
-    url('https://i.pinimg.com/originals/bd/99/36/bd9936fad54aedd761e4c899391c0310.jpg');
-  background-repeat: no-repeat;
-  background-position:
-    right top,
-    right 25%,
-    right 50%,
-    right 75%;
-  background-size: 48vw auto;
+/* --- Main Container --- */
+.main-container {
+  width: 750px;
+  margin: 20px;
+  background: rgba(0,0,0,0.85);
+  border: 4px solid #00ffcc;
+  padding: 16px;
+  box-shadow: 0 0 20px #00ffcc;
 }
 
-/* ===== MAIN CONTAINER ===== */
-.main {
-  width: 960px;
-  margin: 20px 0 40px 30px;
-  background: #fff;
-  border: 3px ridge #999;
-}
-
+/* --- Headers & Boxes --- */
 .header {
-  background: linear-gradient(#f2f2f2, #d6d6d6);
-  font-size: 32px;
+  font-size: 36px;
   font-weight: bold;
-  padding: 10px;
+  color:#ff77ff;
+  text-align:center;
+  text-shadow: 2px 2px #00ffcc;
+  margin-bottom:16px;
 }
-
-/* ===== TABLE LAYOUT ===== */
-table { width: 100%; border-collapse: collapse; }
-.left { width: 230px; background: #f8f8f8; vertical-align: top; }
-.right { vertical-align: top; padding: 10px; }
-
-/* ===== BOXES ===== */
 .box {
-  border: 2px outset #bbb;
-  margin: 8px;
-  padding: 6px;
-  font-size: 13px;
+  border:2px solid #ff77ff;
+  padding:10px;
+  margin:12px 0;
+  background: rgba(0,0,0,0.6);
+  box-shadow: 0 0 12px #00ffcc;
 }
-
 .box h3 {
-  font-size: 14px;
-  margin: 0 0 6px;
-  background: #eee;
+  margin:0 0 6px 0;
+  font-weight:bold;
+  color:#00ffff;
+  text-shadow:1px 1px #ff77ff;
 }
 
-/* ===== PROFILE PIC ===== */
-.pfp {
-  width: 160px;
-  height: 160px;
-  object-fit: cover;
-  border: 3px double #555;
+/* --- Profile Pic --- */
+.profile-pic {
+  width:160px;
+  height:160px;
+  object-fit:cover;
+  border:3px solid #ff77ff;
+  display:block;
+  margin:0 auto 6px auto;
 }
 
-/* ===== FRIENDS ===== */
-.friends {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
+/* --- Friends --- */
+.top8-box {
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  justify-content:center;
 }
-
 .friend {
-  width: 80px;
-  height: 80px;
-  font-size: 10px;
-  text-align: center;
-  border: 2px solid #333;
-  background: repeating-linear-gradient(45deg,#ffe6f2,#ffe6f2 5px,#e6f0ff 5px,#e6f0ff 10px);
+  width:80px;
+  height:80px;
+  border:2px solid #00ffcc;
+  background:linear-gradient(45deg,#ff77ff,#00ffff);
+  text-align:center;
+  line-height:80px;
+  font-size:10px;
+  font-weight:bold;
+  color:black;
+  cursor:pointer;
+  transition:0.3s;
+}
+.friend:hover {
+  transform:scale(1.2) rotate(-5deg);
+  box-shadow:0 0 12px #ff77ff;
 }
 
-/* ===== MUSIC ===== */
-.play {
-  background: red;
-  color: white;
-  padding: 6px 10px;
-  cursor: pointer;
-  font-size: 12px;
+/* --- Music Button --- */
+.play-button {
+  display:inline-block;
+  padding:8px 14px;
+  background:#ff0000;
+  color:white;
+  font-weight:bold;
+  cursor:pointer;
+  border-radius:6px;
+  margin-top:4px;
+  text-decoration:none;
+}
+.play-button:hover {
+  background:#ff5555;
 }
 
-/* ===== MARQUEE + BLINK ===== */
-marquee { color: hotpink; font-size: 12px; }
-
-.blink { animation: blink 1s infinite; }
-@keyframes blink { 50% { opacity: 0; } }
-
-/* ===== COMMENTS ===== */
-.comment {
-  border-top: 1px dashed #aaa;
-  font-size: 12px;
-  padding: 4px 0;
-}
-
-/* ===== SCROLL BOX ===== */
-.scrollbox {
-  height: 120px;
-  overflow-y: scroll;
-  border: 1px inset #aaa;
-  padding: 4px;
-}
+/* --- Misc --- */
+a {color:#00ffff; text-decoration:none;}
+a:hover {text-decoration:underline;}
 </style>
 </head>
 <body>
 
-<div class="main">
-  <div class="header">MySpace ✧✧✧</div>
+<div class="main-container">
+  <div class="header">MySpace</div>
 
-  <table>
-    <tr>
-      <!-- LEFT COLUMN -->
-      <td class="left">
-        <div class="box" style="text-align:center;">
-          <img class="pfp" src="https://i.pinimg.com/originals/55/bc/5e/55bc5eea05e85026e81d887ac4c1b644.jpg">
-          <div style="font-size:11px;">★ Oshi no Ko fanart ★</div>
-        </div>
+  <!-- Profile Picture + Info -->
+  <div class="box" style="text-align:center;">
+    <img src="https://i.pinimg.com/originals/55/bc/5e/55bc5eea05e85026e81d887ac4c1b644.jpg" 
+         alt="Oshi no Ko fanart profile" 
+         class="profile-pic">
+    <div style="opacity:0.8; font-size:12px;">★ Oshi no Ko fanart ★</div>
+  </div>
 
-        <div class="box"><b>Status:</b><br> online • nostalgic • coding</div>
-        <div class="box"><b>Mood:</b> dreamy but feral</div>
+  <!-- About Me -->
+  <div class="box">
+    <h3>About Me</h3>
+    Just a curious soul exploring internet art, music, and code — weaving chaos and beauty one page at a time with glittery vibes and digital nostalgia.
+    <br>💻 Technology lover | 📚 Bookworm | 👗 Alternative fashion enthusiast | ✈️ Future Pilot
+  </div>
 
-        <div class="box">
-          <h3>Music</h3>
-          <div id="music"><span class="play" onclick="playSong()">▶ play</span></div>
-        </div>
+  <!-- Future Plans -->
+  <div class="box">
+    <h3>Future Plans</h3>
+    ✈️ Join the Australian Defence Force → Become a Search & Rescue Helicopter Pilot  
+    🚁 Learn to fly planes and helicopters  
+    📖 Continue coding, reading, and exploring aesthetic chaos
+  </div>
 
-        <div class="box">
-          <h3>Top Friends</h3>
-          <div class="friends">
-            <div class="friend">.ੈ✩‧₊˚ Mckenna ˚₊‧✩*ੈ.</div>
-            <div class="friend">.ੈ✩‧₊˚ Krishivaa ˚₊‧✩*ੈ.</div>
-            <div class="friend">.ੈ✩‧₊˚ Deanna ˚₊‧✩*ੈ.</div>
-            <div class="friend">.ੈ✩‧₊˚ You Yi ˚₊‧✩*ੈ.</div>
-            <div class="friend">.ੈ✩‧₊˚ Layla ˚₊‧✩*ੈ.</div>
-            <div class="friend">.ੈ✩‧₊˚ Matilda ˚₊‧✩*ੈ.</div>
-            <div class="friend">.ੈ✩‧₊˚ Anran ˚₊‧✩*ੈ.</div>
-            <div class="friend">.ੈ✩‧₊˚ Sienna ˚₊‧✩*ੈ.</div>
-          </div>
-        </div>
+  <!-- Favorite Books -->
+  <div class="box">
+    <h3>Books I Love</h3>
+    • Sci-fi & Fantasy  
+    • Philosophical works  
+    • Manga (especially Oshi no Ko)  
+    • Anything that inspires thought or creativity
+  </div>
 
-        <div class="box"><span class="blink">Profile Views:</span> 12,487</div>
-      </td>
+  <!-- Friends Top 8 -->
+  <div class="box">
+    <h3>Friends</h3>
+    <div class="top8-box">
+      <div class="friend">Mckenna 💖✧</div>
+      <div class="friend">Krishivaa ✰💫</div>
+      <div class="friend">Deanna 🌟❤️</div>
+      <div class="friend">You Yi ✩💗</div>
+      <div class="friend">Layla 🌙✨</div>
+      <div class="friend">Matilda 🌼💛</div>
+      <div class="friend">Anran 💜⭐</div>
+      <div class="friend">Sienna ❤🌸</div>
+    </div>
+  </div>
 
-      <!-- RIGHT COLUMN -->
-      <td class="right">
-        <marquee scrollamount="4">★ welcome to my profile ★ it's nice to see you again ★</marquee>
+  <!-- Music Player -->
+  <div class="box">
+    <h3>Music Player</h3>
+    <div id="musicArea">
+      <span class="play-button" onclick="startVideo()">▶ Play Song</span>
+    </div>
+  </div>
 
-        <div class="box">
-          <h3>About Me</h3>
-          curious soul exploring internet art, music, and code.<br>
-          likes things that flicker, feel unreal, or shouldn't exist anymore.
-        </div>
+  <!-- Mood Board / GIFs -->
+  <div class="box">
+    <h3>Aesthetic Mood Board</h3>
+    <div style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center;">
+      <img src="https://i.redd.it/gaze-kurama-fanart-by-me-v0-clz7cb180kac1.jpeg" width="100" height="100" style="object-fit:cover; border:2px solid #ff77ff;">
+      <img src="https://cdnb.artstation.com/p/assets/images/images/068/275/875/original/twaddle-olenascare.gif?1697440112" width="100" height="100" style="object-fit:cover; border:2px solid #00ffcc;">
+      <img src="https://cdn.donmai.us/original/1a/34/1a34aaf050ea4fbbde103cda8e1d1d18.jpg" width="100" height="100" style="object-fit:cover; border:2px solid #ff77ff;">
+      <img src="https://pa1.aminoapps.com/7902/bc7e007d37d1d530c2ac18ee31aa0ee5737246a8r1-450-450_128.gif" width="100" height="100" style="object-fit:cover; border:2px solid #00ffcc;">
+    </div>
+  </div>
 
-        <div class="box">
-          <h3>Interests</h3>
-          ✦ weird websites<br>✦ manga fanart<br>✦ ambient music<br>✦ nostalgia<br>✦ liminal vibes
-        </div>
-
-        <div class="box">
-          <h3>Who I'd Like to Meet</h3>
-          people who understand the vibe without explanation
-        </div>
-
-
-        <div class="box"><span class="blink">Last Login:</span> moments ago</div>
-      </td>
-    </tr>
-  </table>
+  <div class="box">
+    <h3>Now Playing</h3>
+    <span id="nowPlaying" style="color:#ff77ff;font-weight:bold;">🎵 Wolf in Sheep's Clothing [Reborn Edition]</span>
+  </div>
 </div>
 
 <script>
-function playSong() {
-  document.getElementById('music').innerHTML = `
-    <iframe width="180" height="100"
-      src="https://www.youtube.com/embed/U2mSRPo8MTg?autoplay=1"
-      allow="autoplay"></iframe>`;
+function startVideo() {
+  const area = document.getElementById('musicArea');
+  area.innerHTML = `<iframe width="180" height="100" 
+      src="https://www.youtube.com/embed/U2mSRPo8MTg?autoplay=1&controls=1" 
+      frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
 }
 </script>
 
