@@ -5,236 +5,284 @@
 <title>MySpace</title>
 
 <style>
-* { box-sizing: border-box; }
-
+/* =========================
+   GLOBAL MYSPACE VIBE
+========================= */
 html, body {
   margin: 0;
   padding: 0;
   height: 100%;
-  font-family: Arial, Helvetica, sans-serif;
-  cursor: url("https://cur.cursors-4u.net/symbols/sym-1/sym49.cur"), auto;
-}
-
-/* ===== LAYOUT ===== */
-.page {
-  display: flex;
-  min-height: 100vh;
-}
-
-.left {
-  width: 66%;
-  background: linear-gradient(#fff0f7, #f7f7ff);
-  padding: 20px;
-  overflow-y: auto;
-  border-right: 4px double hotpink;
-}
-
-.right {
-  width: 34%;
+  font-family: Verdana, Arial, sans-serif;
   background: black;
+  overflow: hidden;
 }
 
-.right img {
-  width: 100%;
-  display: block;
+/* =========================
+   MAIN SPLIT LAYOUT
+========================= */
+#page {
+  display: flex;
+  height: 100vh;
 }
 
-/* ===== TEXT ===== */
-h1 {
-  font-size: 36px;
-  margin: 0;
-  color: hotpink;
-  text-shadow: 2px 2px #ffb6d9;
-}
-
-h2 {
-  background: #ffd6eb;
-  padding: 6px;
-  border: 2px solid #ff69b4;
-  font-size: 16px;
-}
-
-p {
-  font-size: 14px;
-  line-height: 1.6;
-}
-
-.small {
-  font-size: 12px;
-  opacity: 0.75;
-}
-
-/* ===== BOXES ===== */
-.box {
-  border: 2px solid #ff69b4;
-  background: white;
+/* LEFT CONTENT AREA */
+#content {
+  width: 65%;
+  background: #ffffff;
+  overflow-y: auto;
   padding: 10px;
-  margin: 14px 0;
+  box-sizing: border-box;
+  border-right: 4px solid #999;
 }
 
-/* ===== FRIENDS ===== */
-.friends {
+/* RIGHT BACKGROUND STRIP */
+#background-strip {
+  width: 35%;
+  display: grid;
+  grid-template-rows: repeat(4, 1fr);
+}
+
+.bg-tile {
+  background-size: cover;
+  background-position: center;
+}
+
+/* =========================
+   HEADER
+========================= */
+#header {
+  background: #eeeeee;
+  border: 2px solid #999;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+#header h1 {
+  margin: 0;
+  font-size: 28px;
+  color: #003399;
+}
+
+/* =========================
+   PROFILE LAYOUT
+========================= */
+#profile {
+  display: flex;
+  gap: 10px;
+}
+
+/* LEFT SIDEBAR */
+#sidebar {
+  width: 200px;
+}
+
+/* MAIN INFO */
+#main-info {
+  flex: 1;
+}
+
+/* =========================
+   BOXES (MYSPACE CORE)
+========================= */
+.box {
+  border: 2px solid #999;
+  background: #f9f9f9;
+  margin-bottom: 10px;
+  font-size: 12px;
+}
+
+.box-title {
+  background: #ccccff;
+  padding: 4px;
+  font-weight: bold;
+  color: #000066;
+}
+
+.box-content {
+  padding: 6px;
+}
+
+/* =========================
+   PROFILE PIC
+========================= */
+#pfp {
+  width: 180px;
+  height: 180px;
+  border: 2px solid #000;
+  object-fit: cover;
+  display: block;
+  margin: auto;
+}
+
+/* =========================
+   FRIEND BOXES
+========================= */
+.friends-grid {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 6px;
 }
 
-.friend {
-  width: 120px;
-  font-size: 11px;
+.friend-box {
+  width: 80px;
+  height: 80px;
+  border: 2px solid #555;
+  background: #ddd;
+  font-size: 10px;
   text-align: center;
-  border: 2px dashed #ff69b4;
-  padding: 6px;
-  background: #fff5fa;
+  padding-top: 8px;
+  box-sizing: border-box;
 }
 
-/* ===== MARQUEE ===== */
-marquee {
-  background: black;
-  color: #00ff66;
-  padding: 6px;
-  font-weight: bold;
-  margin: 12px 0;
-}
-
-/* ===== IMAGES ===== */
-.inline-img {
-  max-width: 100%;
-  border: 2px solid hotpink;
-  margin: 8px 0;
-}
-
-.tiny {
-  width: 40px;
-  vertical-align: middle;
-}
-
-/* ===== GLITTER ===== */
-.sparkle {
-  color: hotpink;
+/* =========================
+   MARQUEE + CHAOS
+========================= */
+.marquee {
+  color: #ff0099;
   font-weight: bold;
 }
 
-/* ===== CURSOR TRAIL ===== */
-.glitter {
-  position: fixed;
-  pointer-events: none;
-  font-size: 12px;
-  animation: fade 1s forwards;
+/* =========================
+   LINKS
+========================= */
+a {
+  color: #0033cc;
+  text-decoration: underline;
 }
 
-@keyframes fade {
-  to {
-    opacity: 0;
-    transform: translateY(10px);
-  }
+a:hover {
+  color: red;
+}
+
+/* =========================
+   TINY GIFS
+========================= */
+.tiny-gif {
+  width: 60px;
+  display: inline-block;
+  margin: 4px;
 }
 </style>
 </head>
 
 <body>
 
-<div class="page">
+<div id="page">
 
-<!-- ========== LEFT PANEL ========== -->
-<div class="left">
+  <!-- LEFT CONTENT -->
+  <div id="content">
 
-<h1>MySpace ✩</h1>
+    <div id="header">
+      <h1>MySpace</h1>
+      <marquee class="marquee" scrollamount="4">
+        WELCOME TO MY PROFILE • BEST VIEWED AT 1024x768 • DO NOT STEAL •
+      </marquee>
+    </div>
 
-<marquee scrollamount="4">
-✧ welcome ✧ this page has no goal ✧ scroll gently ✧
-</marquee>
+    <div id="profile">
 
-<div class="box">
-<h2>About Me</h2>
-<p>
-i’m a person who likes observing systems — cosmic ones, technical ones,
-and the quiet internal ones that don’t have names yet.
-</p>
-<p>
-i want to fly planes for the australian defence force,
-then transition into search & rescue helicopters.
-something about the sky feels honest.
-</p>
-<p class="small">
-this page exists because i wanted it to.
-</p>
-</div>
+      <!-- SIDEBAR -->
+      <div id="sidebar">
 
-<img class="inline-img" src="https://is3-ssl.mzstatic.com/image/thumb/Music112/v4/47/38/a7/4738a73c-6bed-7b55-36e3-034b734ea19e/cover.jpg">
+        <div class="box">
+          <div class="box-title">Profile Picture</div>
+          <div class="box-content" style="text-align:center;">
+            <img id="pfp"
+              src="https://i.pinimg.com/originals/55/bc/5e/55bc5eea05e85026e81d887ac4c1b644.jpg"
+              alt="profile picture">
+            <div style="margin-top:6px; font-size:10px;">
+              fanart • oshi no ko
+            </div>
+          </div>
+        </div>
 
-<div class="box">
-<h2>Things I Like (Not Ranked)</h2>
-<p>
-aviation · helicopters · books that feel like secrets  
-coding · old internet aesthetics · alternative fashion  
-music that feels sharp · quiet nights · being alone but not lonely  
-</p>
-<img class="tiny" src="https://pa1.aminoapps.com/7902/bc7e007d37d1d530c2ac18ee31aa0ee5737246a8r1-450-450_128.gif">
-</div>
+        <div class="box">
+          <div class="box-title">Music</div>
+          <div class="box-content" id="musicBox">
+            <button onclick="playMusic()">PLAY SONG</button>
+          </div>
+        </div>
 
-<div class="box">
-<h2>Visual Noise I Enjoy</h2>
-<img class="inline-img" src="https://cdnb.artstation.com/p/assets/images/images/068/275/875/original/twaddle-olenascare.gif">
-<img class="inline-img" src="https://preview.redd.it/thou-shalt-not-avert-thine-eyes-v0-9mprx4m18soc1.jpeg">
-<img class="inline-img" src="https://cdn.donmai.us/original/08/d3/__original_drawn_by_john_kafka__08d3722b7a82cff926677bc62667ddbb.jpg">
-</div>
+        <div class="box">
+          <div class="box-title">Top Friends</div>
+          <div class="box-content">
+            <div class="friends-grid">
+              <div class="friend-box">Mckenna</div>
+              <div class="friend-box">Krishivaa</div>
+              <div class="friend-box">Deanna</div>
+              <div class="friend-box">You Yi</div>
+              <div class="friend-box">Layla</div>
+              <div class="friend-box">Matilda</div>
+              <div class="friend-box">Anran</div>
+              <div class="friend-box">Sienna</div>
+            </div>
+          </div>
+        </div>
 
-<marquee direction="right" scrollamount="2">
-★ nothing here is finished ★ everything is allowed ★
-</marquee>
+      </div>
 
-<div class="box">
-<h2>Friends</h2>
-<div class="friends">
-  <div class="friend">.ੈ✩‧₊˚<br>Mckenna 💖</div>
-  <div class="friend">.ੈ✩‧₊˚<br>Krishivaa ✰</div>
-  <div class="friend">.ੈ✩‧₊˚<br>Deanna ❤️</div>
-  <div class="friend">.ੈ✩‧₊˚<br>You Yi ✩</div>
-  <div class="friend">.ੈ✩‧₊˚<br>Layla 🌙</div>
-  <div class="friend">.ੈ✩‧₊˚<br>Matilda 🌼</div>
-  <div class="friend">.ੈ✩‧₊˚<br>Anran ⭐</div>
-  <div class="friend">.ੈ✩‧₊˚<br>Sienna 🌸</div>
-</div>
-</div>
+      <!-- MAIN INFO -->
+      <div id="main-info">
 
-<div class="box">
-<h2>Unimportant Thoughts</h2>
-<p>
-sometimes the internet feels quieter when it’s handmade.
-</p>
-<p>
-sometimes things don’t need interaction.
-they just need to exist.
-</p>
-</div>
+        <div class="box">
+          <div class="box-title">About Me</div>
+          <div class="box-content">
+            quiet but not empty.<br>
+            obsessed with the internet as a place.<br>
+            learning code because it feels like carving symbols into the dark.<br>
+            future pilot. helicopters. search and rescue.<br>
+            alternative fashion. books everywhere. curiosity first.<br><br>
+            this page will never be finished.
+          </div>
+        </div>
 
-<img class="inline-img" src="https://preview.redd.it/adrsygg1rcr61.jpg">
+        <div class="box">
+          <div class="box-title">Interests</div>
+          <div class="box-content">
+            aviation • helicopters • reading • coding • abandoned websites •
+            glitter cursors • weird html • long nights • music that hurts a bit
+          </div>
+        </div>
 
-<div style="height:700px;"></div>
+        <div class="box">
+          <div class="box-title">Details</div>
+          <div class="box-content">
+            status: online somewhere else<br>
+            location: australia<br>
+            occupation: becoming<br>
+            mood: contemplative
+          </div>
+        </div>
 
-</div>
+        <div class="box">
+          <div class="box-title">Images / Blinkies</div>
+          <div class="box-content">
+            <img class="tiny-gif" src="https://pa1.aminoapps.com/7902/bc7e007d37d1d530c2ac18ee31aa0ee5737246a8r1-450-450_128.gif">
+            <img class="tiny-gif" src="https://cdnb.artstation.com/p/assets/images/images/068/275/875/original/twaddle-olenascare.gif">
+            <img class="tiny-gif" src="https://is3-ssl.mzstatic.com/image/thumb/Music112/v4/47/38/a7/4738a73c-6bed-7b55-36e3-034b734ea19e/cover.jpg/1200x1200bf-60.jpg">
+          </div>
+        </div>
 
-<!-- ========== RIGHT PANEL ========== -->
-<div class="right">
-  <img src="https://i.pinimg.com/736x/80/45/08/80450879d7a66fb6ebca701006a60508.jpg">
-  <img src="https://th.bing.com/th/id/OIP.TwrywoPbXoiwNY_UB1W5gAHaNK?o=7rm=3&rs=1&pid=ImgDetMain&o=7&rm=3">
-  <img src="https://i.pinimg.com/736x/0a/29/b8/0a29b8917c4f64df5989c5142835bd32.jpg">
-  <img src="https://i.pinimg.com/originals/bd/99/36/bd9936fad54aedd761e4c899391c0310.jpg">
-</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- RIGHT BACKGROUND STRIP -->
+  <div id="background-strip">
+    <div class="bg-tile" style="background-image:url('https://i.pinimg.com/736x/80/45/08/80450879d7a66fb6ebca701006a60508.jpg');"></div>
+    <div class="bg-tile" style="background-image:url('https://th.bing.com/th/id/OIP.TwrywoPbXoiwNY_UB1W5gAHaNK?o=7rm=3&rs=1&pid=ImgDetMain&o=7&rm=3');"></div>
+    <div class="bg-tile" style="background-image:url('https://i.pinimg.com/736x/0a/29/b8/0a29b8917c4f64df5989c5142835bd32.jpg');"></div>
+    <div class="bg-tile" style="background-image:url('https://i.pinimg.com/originals/bd/99/36/bd9936fad54aedd761e4c899391c0310.jpg');"></div>
+  </div>
 
 </div>
 
 <script>
-document.addEventListener("mousemove", e => {
-  const g = document.createElement("div");
-  g.className = "glitter";
-  g.textContent = "✧";
-  g.style.left = e.pageX + "px";
-  g.style.top = e.pageY + "px";
-  document.body.appendChild(g);
-  setTimeout(() => g.remove(), 1000);
-});
+function playMusic() {
+  document.getElementById("musicBox").innerHTML =
+    '<iframe width="180" height="100" src="https://www.youtube.com/embed/U2mSRPo8MTg?autoplay=1" allow="autoplay"></iframe>';
+}
 </script>
 
 </body>
