@@ -5,228 +5,240 @@
 <title>MySpace</title>
 
 <style>
-/* =======================
-   GLOBAL + BACKGROUND
-======================= */
+/* =====================
+   GLOBAL RESET
+===================== */
+* {
+  box-sizing: border-box;
+}
+
 html, body {
   margin: 0;
   padding: 0;
-  background:
-    url('https://i.pinimg.com/736x/80/45/08/80450879d7a66fb6ebca701006a60508.jpg') 75% top no-repeat,
-    url('https://th.bing.com/th/id/OIP.TwrywoPbXoiwNY_UB1W5gAHaNK?o=7rm=3&rs=1&pid=ImgDetMain&o=7&rm=3') 83% top no-repeat,
-    url('https://i.pinimg.com/736x/0a/29/b8/0a29b8917c4f64df5989c5142835bd32.jpg') 91% top no-repeat,
-    url('https://i.pinimg.com/originals/bd/99/36/bd9936fad54aedd761e4c899391c0310.jpg') 99% top no-repeat;
-  background-size: 8% auto, 8% auto, 8% auto, 8% auto;
-  background-color: black;
+  height: 100%;
   font-family: Arial, Helvetica, sans-serif;
+  cursor: url("https://cur.cursors-4u.net/symbols/sym-1/sym49.cur"), auto;
 }
 
-/* =======================
-   MAIN CONTAINER
-======================= */
-table.main {
-  width: 900px;
-  margin: 20px 0 40px 40px;
-  background: #ffffff;
-  border: 3px solid #999;
-  border-collapse: collapse;
+/* =====================
+   LAYOUT
+===================== */
+.page {
+  display: flex;
+  min-height: 100vh;
 }
 
-.header {
-  background: linear-gradient(#f2f2f2, #dcdcdc);
-  font-size: 32px;
-  font-weight: bold;
-  padding: 12px;
-  color: #333;
-  border-bottom: 2px solid #aaa;
+/* LEFT MAIN AREA */
+.left {
+  width: 66%;
+  background: linear-gradient(#fff0f7, #f7f7ff);
+  padding: 20px;
+  overflow-y: auto;
+  border-right: 4px double hotpink;
 }
 
-/* =======================
-   COLUMNS
-======================= */
-td.left {
-  width: 230px;
-  vertical-align: top;
-  background: #f9f9f9;
-  border-right: 2px solid #ccc;
+/* RIGHT IMAGE STRIP */
+.right {
+  width: 34%;
+  background: black;
 }
 
-td.right {
-  vertical-align: top;
-  padding: 12px;
+.right img {
+  width: 100%;
+  display: block;
 }
 
-/* =======================
-   BOXES
-======================= */
-.box {
-  border: 2px solid #bbb;
-  margin: 8px;
+/* =====================
+   HEADERS + TEXT
+===================== */
+h1 {
+  font-size: 36px;
+  margin: 0;
+  color: hotpink;
+  text-shadow: 2px 2px #ffb6d9;
+}
+
+h2 {
+  background: #ffd6eb;
   padding: 6px;
-  background: #fff;
-  font-size: 13px;
+  border: 2px solid #ff69b4;
+  font-size: 16px;
 }
 
-.box h3 {
-  margin: 0 0 6px 0;
+p {
   font-size: 14px;
-  background: #eee;
-  padding: 4px;
-  border-bottom: 1px solid #aaa;
+  line-height: 1.6;
 }
 
-/* =======================
-   PROFILE PIC
-======================= */
-.profile-pic {
-  width: 180px;
-  height: 180px;
-  object-fit: cover;
-  border: 3px solid #555;
+/* =====================
+   BOXES
+===================== */
+.box {
+  border: 2px solid #ff69b4;
+  background: white;
+  padding: 10px;
+  margin: 12px 0;
 }
 
-/* =======================
+/* =====================
    FRIENDS
-======================= */
+===================== */
 .friends {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
-}
-
-.friend {
-  width: 90px;
-  height: 60px;
-  background: linear-gradient(#ffd6f0, #ffeaf7);
-  border: 2px solid #ff69b4;
-  font-size: 10px;
-  text-align: center;
-  padding-top: 6px;
-  font-weight: bold;
-}
-
-.friend span {
-  display: block;
-  font-weight: normal;
-}
-
-/* =======================
-   MUSIC BUTTON
-======================= */
-.play-button {
-  display: inline-block;
-  background: red;
-  color: white;
-  padding: 8px 14px;
-  font-weight: bold;
-  cursor: pointer;
-  border-radius: 6px;
-  margin-top: 6px;
-}
-
-/* =======================
-   MOODBOARD
-======================= */
-.moodboard {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
   gap: 8px;
 }
 
-.moodboard img {
-  width: 100%;
-  border: 2px solid #000;
+.friend {
+  width: 120px;
+  font-size: 11px;
+  text-align: center;
+  border: 2px dashed #ff69b4;
+  padding: 6px;
+  background: #fff5fa;
 }
 
-/* =======================
+/* =====================
+   MARQUEE
+===================== */
+marquee {
+  background: black;
+  color: #00ff66;
+  padding: 6px;
+  font-weight: bold;
+  margin: 10px 0;
+}
+
+/* =====================
+   TINY GIFS
+===================== */
+.tiny {
+  width: 40px;
+  vertical-align: middle;
+}
+
+/* =====================
    SPARKLES
-======================= */
+===================== */
 .sparkle {
   color: hotpink;
   font-weight: bold;
+}
+
+/* =====================
+   GLITTER TRAIL
+===================== */
+.glitter {
+  position: fixed;
+  pointer-events: none;
+  font-size: 12px;
+  animation: fade 1s forwards;
+}
+
+@keyframes fade {
+  to {
+    opacity: 0;
+    transform: translateY(10px);
+  }
 }
 </style>
 </head>
 
 <body>
 
-<table class="main">
-<tr>
-  <td colspan="2" class="header">MySpace</td>
-</tr>
+<div class="page">
 
-<tr>
-<td class="left">
+  <!-- ================= LEFT SIDE ================= -->
+  <div class="left">
 
-  <div class="box" style="text-align:center;">
-    <img class="profile-pic"
-      src="https://i.pinimg.com/originals/55/bc/5e/55bc5eea05e85026e81d887ac4c1b644.jpg">
-    <div style="font-size:11px;margin-top:4px;">★ Oshi no Ko fanart ★</div>
-  </div>
+    <h1>MySpace ✩</h1>
 
-  <div class="box">
-    <h3>Music</h3>
-    <div id="musicArea">
-      <div class="play-button" onclick="playSong()">▶ Play Song</div>
+    <marquee scrollamount="4">
+      ✧ welcome to my page ✧ stay as long as you like ✧ nothing is urgent ✧
+    </marquee>
+
+    <div class="box">
+      <h2>About Me</h2>
+      <p>
+        curious observer of everything. i like technology, aesthetics,
+        old internet spaces, and learning how things work.
+        someday i want to fly planes for the australian defence force,
+        then transition into search & rescue helicopters 🚁✈️
+      </p>
+      <p>
+        i love books, reading, coding, alternative fashion, being quietly myself,
+        and making things that don’t need a reason to exist.
+        <span class="sparkle">✧</span>
+      </p>
     </div>
-  </div>
 
-  <div class="box">
-    <h3>Friends</h3>
-    <div class="friends">
-      <div class="friend">.ੈ✩‧₊˚<br>Mckenna<span>💖✧</span></div>
-      <div class="friend">.ੈ✩‧₊˚<br>Krishivaa<span>✰💫</span></div>
-      <div class="friend">.ੈ✩‧₊˚<br>Deanna<span>🌟❤️</span></div>
-      <div class="friend">.ੈ✩‧₊˚<br>You Yi<span>✩💗</span></div>
-      <div class="friend">.ੈ✩‧₊˚<br>Layla<span>🌙✨</span></div>
-      <div class="friend">.ੈ✩‧₊˚<br>Matilda<span>🌼💛</span></div>
-      <div class="friend">.ੈ✩‧₊˚<br>Anran<span>💜⭐</span></div>
-      <div class="friend">.ੈ✩‧₊˚<br>Sienna<span>❤🌸</span></div>
+    <div class="box">
+      <h2>Interests</h2>
+      aviation · helicopters · night skies · nihilism · interesting music ·
+      coding · old websites · surreal art · fandom · quiet obsession  
+      <img class="tiny" src="https://pa1.aminoapps.com/7902/bc7e007d37d1d530c2ac18ee31aa0ee5737246a8r1-450-450_128.gif">
     </div>
-  </div>
 
-</td>
-
-<td class="right">
-
-  <div class="box">
-    <h3>About Me</h3>
-    curious. observant. quietly obsessed with aesthetics, technology, stories,
-    and becoming a pilot someday — first for the australian defence force,
-    then search & rescue helicopters.  
-    <span class="sparkle">✧</span>  
-    i like books, code, alternative fashion, the internet as art, and being myself.
-  </div>
-
-  <div class="box">
-    <h3>Interests</h3>
-    aviation ✈️ · helicopters 🚁 · reading 📚 · coding 💻 · internet nostalgia  
-    · surreal art · music that feels dangerous · existing without explanation
-  </div>
-
-  <div class="box">
-    <h3>Moodboard</h3>
-    <div class="moodboard">
-      <img src="https://is3-ssl.mzstatic.com/image/thumb/Music112/v4/47/38/a7/4738a73c-6bed-7b55-36e3-034b734ea19e/cover.jpg">
-      <img src="https://i.redd.it/gaze-kurama-fanart-by-me-v0-clz7cb180kac1.jpeg">
-      <img src="https://cdnb.artstation.com/p/assets/images/images/068/275/875/original/twaddle-olenascare.gif">
-      <img src="https://cdn.donmai.us/original/1a/34/1a34aaf050ea4fbbde103cda8e1d1d18.jpg">
-      <img src="https://cdn.donmai.us/original/08/d3/__original_drawn_by_john_kafka__08d3722b7a82cff926677bc62667ddbb.jpg">
-      <img src="https://pa1.aminoapps.com/7902/bc7e007d37d1d530c2ac18ee31aa0ee5737246a8r1-450-450_128.gif">
+    <div class="box">
+      <h2>Friends</h2>
+      <div class="friends">
+        <div class="friend">.ੈ✩‧₊˚<br>Mckenna </div>
+        <div class="friend">.ੈ✩‧₊˚<br>Krishivaa </div>
+        <div class="friend">.ੈ✩‧₊˚<br>Deanna </div>
+        <div class="friend">.ੈ✩‧₊˚<br>You Yi </div>
+        <div class="friend">.ੈ✩‧₊˚<br>Layla </div>
+        <div class="friend">.ੈ✩‧₊˚<br>Matilda </div>
+        <div class="friend">.ੈ✩‧₊˚<br>Anran </div>
+        <div class="friend">.ੈ✩‧₊˚<br>Sienna </div>
+      </div>
     </div>
+
+    <marquee direction="right" scrollamount="2">
+      ★ nothing here is finished ★ everything is allowed ★
+    </marquee>
+
+    <div class="box">
+      <h2>Extra</h2>
+      <p>
+        this page doesn’t track you. it doesn’t care how long you stay.
+        it exists because it can.
+      </p>
+      <p>
+        scroll forever. or don’t.
+      </p>
+    </div>
+
+    <!-- Spacer to make scrolling long -->
+    <div style="height:600px;"></div>
+
   </div>
 
-</td>
-</tr>
-</table>
+  <!-- ================= RIGHT SIDE ================= -->
+  <div class="right">
+    <img src="https://i.pinimg.com/736x/80/45/08/80450879d7a66fb6ebca701006a60508.jpg">
+    <img src="https://th.bing.com/th/id/OIP.TwrywoPbXoiwNY_UB1W5gAHaNK?o=7rm=3&rs=1&pid=ImgDetMain&o=7&rm=3">
+    <img src="https://i.pinimg.com/736x/0a/29/b8/0a29b8917c4f64df5989c5142835bd32.jpg">
+    <img src="https://i.pinimg.com/originals/bd/99/36/bd9936fad54aedd761e4c899391c0310.jpg">
+  </div>
+
+</div>
 
 <script>
-function playSong(){
-  document.getElementById("musicArea").innerHTML = `
-  <iframe width="200" height="113"
-    src="https://www.youtube.com/embed/U2mSRPo8MTg?autoplay=1"
-    allow="autoplay"></iframe>`;
-}
+/* GLITTER TRAIL */
+document.addEventListener("mousemove", e => {
+  const g = document.createElement("div");
+  g.className = "glitter";
+  g.textContent = "✧";
+  g.style.left = e.pageX + "px";
+  g.style.top = e.pageY + "px";
+  document.body.appendChild(g);
+  setTimeout(() => g.remove(), 1000);
+});
+</script>
+
+</body>
+</html>
+
 </script>
 
 </body>
