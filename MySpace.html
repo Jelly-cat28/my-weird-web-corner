@@ -2,198 +2,230 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MySpace</title>
+
 <style>
-/* --- Background Tiles --- */
-body, html {
-  margin:0;
-  padding:0;
-  font-family: Verdana, Arial, sans-serif;
-  background-color: black;
-  height:100%;
+/* =======================
+   GLOBAL + BACKGROUND
+======================= */
+html, body {
+  margin: 0;
+  padding: 0;
   background:
-    url('https://i.pinimg.com/736x/80/45/08/80450879d7a66fb6ebca701006a60508.jpg') left top repeat-y,
-    url('https://th.bing.com/th/id/OIP.TwrywoPbXoiwNY_UB1W5gAHaNK?o=7rm=3&rs=1&pid=ImgDetMain&o=7&rm=3') left 25% top repeat-y,
-    url('https://i.pinimg.com/736x/0a/29/b8/0a29b8917c4f64df5989c5142835bd32.jpg') left 50% top repeat-y,
-    url('https://i.pinimg.com/originals/bd/99/36/bd9936fad54aedd761e4c899391c0310.jpg') left 75% top repeat-y;
-  background-size:25% auto;
-  background-attachment:fixed;
-  color:#fff;
+    url('https://i.pinimg.com/736x/80/45/08/80450879d7a66fb6ebca701006a60508.jpg') 75% top no-repeat,
+    url('https://th.bing.com/th/id/OIP.TwrywoPbXoiwNY_UB1W5gAHaNK?o=7rm=3&rs=1&pid=ImgDetMain&o=7&rm=3') 83% top no-repeat,
+    url('https://i.pinimg.com/736x/0a/29/b8/0a29b8917c4f64df5989c5142835bd32.jpg') 91% top no-repeat,
+    url('https://i.pinimg.com/originals/bd/99/36/bd9936fad54aedd761e4c899391c0310.jpg') 99% top no-repeat;
+  background-size: 8% auto, 8% auto, 8% auto, 8% auto;
+  background-color: black;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
-/* --- Main Container --- */
-.main-container {
-  width: 750px;
-  margin: 20px;
-  background: rgba(0,0,0,0.85);
-  border: 4px solid #00ffcc;
-  padding: 16px;
-  box-shadow: 0 0 20px #00ffcc;
+/* =======================
+   MAIN CONTAINER
+======================= */
+table.main {
+  width: 900px;
+  margin: 20px 0 40px 40px;
+  background: #ffffff;
+  border: 3px solid #999;
+  border-collapse: collapse;
 }
 
-/* --- Headers & Boxes --- */
 .header {
-  font-size: 36px;
+  background: linear-gradient(#f2f2f2, #dcdcdc);
+  font-size: 32px;
   font-weight: bold;
-  color:#ff77ff;
-  text-align:center;
-  text-shadow: 2px 2px #00ffcc;
-  margin-bottom:16px;
+  padding: 12px;
+  color: #333;
+  border-bottom: 2px solid #aaa;
 }
+
+/* =======================
+   COLUMNS
+======================= */
+td.left {
+  width: 230px;
+  vertical-align: top;
+  background: #f9f9f9;
+  border-right: 2px solid #ccc;
+}
+
+td.right {
+  vertical-align: top;
+  padding: 12px;
+}
+
+/* =======================
+   BOXES
+======================= */
 .box {
-  border:2px solid #ff77ff;
-  padding:10px;
-  margin:12px 0;
-  background: rgba(0,0,0,0.6);
-  box-shadow: 0 0 12px #00ffcc;
+  border: 2px solid #bbb;
+  margin: 8px;
+  padding: 6px;
+  background: #fff;
+  font-size: 13px;
 }
+
 .box h3 {
-  margin:0 0 6px 0;
-  font-weight:bold;
-  color:#00ffff;
-  text-shadow:1px 1px #ff77ff;
+  margin: 0 0 6px 0;
+  font-size: 14px;
+  background: #eee;
+  padding: 4px;
+  border-bottom: 1px solid #aaa;
 }
 
-/* --- Profile Pic --- */
+/* =======================
+   PROFILE PIC
+======================= */
 .profile-pic {
-  width:160px;
-  height:160px;
-  object-fit:cover;
-  border:3px solid #ff77ff;
-  display:block;
-  margin:0 auto 6px auto;
+  width: 180px;
+  height: 180px;
+  object-fit: cover;
+  border: 3px solid #555;
 }
 
-/* --- Friends --- */
-.top8-box {
-  display:flex;
-  flex-wrap:wrap;
-  gap:6px;
-  justify-content:center;
+/* =======================
+   FRIENDS
+======================= */
+.friends {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
 }
+
 .friend {
-  width:80px;
-  height:80px;
-  border:2px solid #00ffcc;
-  background:linear-gradient(45deg,#ff77ff,#00ffff);
-  text-align:center;
-  line-height:80px;
-  font-size:10px;
-  font-weight:bold;
-  color:black;
-  cursor:pointer;
-  transition:0.3s;
-}
-.friend:hover {
-  transform:scale(1.2) rotate(-5deg);
-  box-shadow:0 0 12px #ff77ff;
+  width: 90px;
+  height: 60px;
+  background: linear-gradient(#ffd6f0, #ffeaf7);
+  border: 2px solid #ff69b4;
+  font-size: 10px;
+  text-align: center;
+  padding-top: 6px;
+  font-weight: bold;
 }
 
-/* --- Music Button --- */
+.friend span {
+  display: block;
+  font-weight: normal;
+}
+
+/* =======================
+   MUSIC BUTTON
+======================= */
 .play-button {
-  display:inline-block;
-  padding:8px 14px;
-  background:#ff0000;
-  color:white;
-  font-weight:bold;
-  cursor:pointer;
-  border-radius:6px;
-  margin-top:4px;
-  text-decoration:none;
-}
-.play-button:hover {
-  background:#ff5555;
+  display: inline-block;
+  background: red;
+  color: white;
+  padding: 8px 14px;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 6px;
+  margin-top: 6px;
 }
 
-/* --- Misc --- */
-a {color:#00ffff; text-decoration:none;}
-a:hover {text-decoration:underline;}
+/* =======================
+   MOODBOARD
+======================= */
+.moodboard {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.moodboard img {
+  width: 100%;
+  border: 2px solid #000;
+}
+
+/* =======================
+   SPARKLES
+======================= */
+.sparkle {
+  color: hotpink;
+  font-weight: bold;
+}
 </style>
 </head>
+
 <body>
 
-<div class="main-container">
-  <div class="header">MySpace</div>
+<table class="main">
+<tr>
+  <td colspan="2" class="header">MySpace</td>
+</tr>
 
-  <!-- Profile Picture + Info -->
+<tr>
+<td class="left">
+
   <div class="box" style="text-align:center;">
-    <img src="https://i.pinimg.com/originals/55/bc/5e/55bc5eea05e85026e81d887ac4c1b644.jpg" 
-         alt="Oshi no Ko fanart profile" 
-         class="profile-pic">
-    <div style="opacity:0.8; font-size:12px;">★ Oshi no Ko fanart ★</div>
+    <img class="profile-pic"
+      src="https://i.pinimg.com/originals/55/bc/5e/55bc5eea05e85026e81d887ac4c1b644.jpg">
+    <div style="font-size:11px;margin-top:4px;">★ Oshi no Ko fanart ★</div>
   </div>
 
-  <!-- About Me -->
   <div class="box">
-    <h3>About Me</h3>
-    Just a curious soul exploring internet art, music, and code — weaving chaos and beauty one page at a time with glittery vibes and digital nostalgia.
-    <br>💻 Technology lover | 📚 Bookworm | 👗 Alternative fashion enthusiast | ✈️ Future Pilot
+    <h3>Music</h3>
+    <div id="musicArea">
+      <div class="play-button" onclick="playSong()">▶ Play Song</div>
+    </div>
   </div>
 
-  <!-- Future Plans -->
-  <div class="box">
-    <h3>Future Plans</h3>
-    ✈️ Join the Australian Defence Force → Become a Search & Rescue Helicopter Pilot  
-    🚁 Learn to fly planes and helicopters  
-    📖 Continue coding, reading, and exploring aesthetic chaos
-  </div>
-
-  <!-- Favorite Books -->
-  <div class="box">
-    <h3>Books I Love</h3>
-    • Sci-fi & Fantasy  
-    • Philosophical works  
-    • Manga (especially Oshi no Ko)  
-    • Anything that inspires thought or creativity
-  </div>
-
-  <!-- Friends Top 8 -->
   <div class="box">
     <h3>Friends</h3>
-    <div class="top8-box">
-      <div class="friend">Mckenna 💖✧</div>
-      <div class="friend">Krishivaa ✰💫</div>
-      <div class="friend">Deanna 🌟❤️</div>
-      <div class="friend">You Yi ✩💗</div>
-      <div class="friend">Layla 🌙✨</div>
-      <div class="friend">Matilda 🌼💛</div>
-      <div class="friend">Anran 💜⭐</div>
-      <div class="friend">Sienna ❤🌸</div>
+    <div class="friends">
+      <div class="friend">.ੈ✩‧₊˚<br>Mckenna<span>💖✧</span></div>
+      <div class="friend">.ੈ✩‧₊˚<br>Krishivaa<span>✰💫</span></div>
+      <div class="friend">.ੈ✩‧₊˚<br>Deanna<span>🌟❤️</span></div>
+      <div class="friend">.ੈ✩‧₊˚<br>You Yi<span>✩💗</span></div>
+      <div class="friend">.ੈ✩‧₊˚<br>Layla<span>🌙✨</span></div>
+      <div class="friend">.ੈ✩‧₊˚<br>Matilda<span>🌼💛</span></div>
+      <div class="friend">.ੈ✩‧₊˚<br>Anran<span>💜⭐</span></div>
+      <div class="friend">.ੈ✩‧₊˚<br>Sienna<span>❤🌸</span></div>
     </div>
   </div>
 
-  <!-- Music Player -->
-  <div class="box">
-    <h3>Music Player</h3>
-    <div id="musicArea">
-      <span class="play-button" onclick="startVideo()">▶ Play Song</span>
-    </div>
-  </div>
+</td>
 
-  <!-- Mood Board / GIFs -->
+<td class="right">
+
   <div class="box">
-    <h3>Aesthetic Mood Board</h3>
-    <div style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center;">
-      <img src="https://i.redd.it/gaze-kurama-fanart-by-me-v0-clz7cb180kac1.jpeg" width="100" height="100" style="object-fit:cover; border:2px solid #ff77ff;">
-      <img src="https://cdnb.artstation.com/p/assets/images/images/068/275/875/original/twaddle-olenascare.gif?1697440112" width="100" height="100" style="object-fit:cover; border:2px solid #00ffcc;">
-      <img src="https://cdn.donmai.us/original/1a/34/1a34aaf050ea4fbbde103cda8e1d1d18.jpg" width="100" height="100" style="object-fit:cover; border:2px solid #ff77ff;">
-      <img src="https://pa1.aminoapps.com/7902/bc7e007d37d1d530c2ac18ee31aa0ee5737246a8r1-450-450_128.gif" width="100" height="100" style="object-fit:cover; border:2px solid #00ffcc;">
-    </div>
+    <h3>About Me</h3>
+    curious. observant. quietly obsessed with aesthetics, technology, stories,
+    and becoming a pilot someday — first for the australian defence force,
+    then search & rescue helicopters.  
+    <span class="sparkle">✧</span>  
+    i like books, code, alternative fashion, the internet as art, and being myself.
   </div>
 
   <div class="box">
-    <h3>Now Playing</h3>
-    <span id="nowPlaying" style="color:#ff77ff;font-weight:bold;">🎵 Wolf in Sheep's Clothing [Reborn Edition]</span>
+    <h3>Interests</h3>
+    aviation ✈️ · helicopters 🚁 · reading 📚 · coding 💻 · internet nostalgia  
+    · surreal art · music that feels dangerous · existing without explanation
   </div>
-</div>
+
+  <div class="box">
+    <h3>Moodboard</h3>
+    <div class="moodboard">
+      <img src="https://is3-ssl.mzstatic.com/image/thumb/Music112/v4/47/38/a7/4738a73c-6bed-7b55-36e3-034b734ea19e/cover.jpg">
+      <img src="https://i.redd.it/gaze-kurama-fanart-by-me-v0-clz7cb180kac1.jpeg">
+      <img src="https://cdnb.artstation.com/p/assets/images/images/068/275/875/original/twaddle-olenascare.gif">
+      <img src="https://cdn.donmai.us/original/1a/34/1a34aaf050ea4fbbde103cda8e1d1d18.jpg">
+      <img src="https://cdn.donmai.us/original/08/d3/__original_drawn_by_john_kafka__08d3722b7a82cff926677bc62667ddbb.jpg">
+      <img src="https://pa1.aminoapps.com/7902/bc7e007d37d1d530c2ac18ee31aa0ee5737246a8r1-450-450_128.gif">
+    </div>
+  </div>
+
+</td>
+</tr>
+</table>
 
 <script>
-function startVideo() {
-  const area = document.getElementById('musicArea');
-  area.innerHTML = `<iframe width="180" height="100" 
-      src="https://www.youtube.com/embed/U2mSRPo8MTg?autoplay=1&controls=1" 
-      frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+function playSong(){
+  document.getElementById("musicArea").innerHTML = `
+  <iframe width="200" height="113"
+    src="https://www.youtube.com/embed/U2mSRPo8MTg?autoplay=1"
+    allow="autoplay"></iframe>`;
 }
 </script>
 
