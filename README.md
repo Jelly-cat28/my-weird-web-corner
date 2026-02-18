@@ -119,22 +119,6 @@ And it is ONLY for my friends.
 </p>
 
 <p class="blink">⚠ HAVE FUN OR ELSE ⚠</p>
-
-<br><br>
-
-<button onclick="explode()">DO NOT CLICK</button>
-
-<script>
-function explode() {
-    alert("YOU CLICKED IT. CHAOS ACTIVATED.");
-    for (let i = 0; i < 50; i++) {
-        let spark = document.createElement("div");
-        spark.className = "sparkle";
-        spark.innerHTML = "✨";
-        spark.style.left = Math.random() * window.innerWidth + "px";
-        spark.style.top = Math.random() * window.innerHeight + "px";
-        document.body.appendChild(spark);
-        setTimeout(() => spark.remove(), 1000);
     }
 }
 </script>
