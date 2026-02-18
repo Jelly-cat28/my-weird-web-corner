@@ -1,4 +1,3 @@
-</style>
 </head>
 
 <body>
@@ -24,9 +23,6 @@ And it is ONLY for my friends.
 </p>
 
 <p class="blink">⚠ HAVE FUN OR ELSE ⚠</p>
-    }
-}
-</script>
 
 </body>
 </html>
