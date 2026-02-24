@@ -2,82 +2,137 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>My 90s Book Webpage</title>
+  <title>Your Book - 90s Pastel Aesthetic</title>
   <style>
     body {
-      background: linear-gradient(135deg, #fceabb 0%, #f8b500 100%);
-      font-family: 'Courier New', Courier, monospace;
-      color: #2e3b4e;
+      background: linear-gradient(135deg, #ffd6e0 0%, #c1fdff 100%);
+      font-family: 'Montserrat', 'Comic Sans MS', cursive, sans-serif;
       margin: 0;
+      min-height: 100vh;
       padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
     }
-    .container {
-      width: 600px;
-      margin: 50px auto;
-      background: #fffaf6;
-      border: 4px solid #ffc0cb;
-      border-radius: 15px;
-      box-shadow: 0 0 12px #ecb3ff;
-      padding: 30px;
-      text-align: center;
+    .card {
+      background: #fff;
+      border-radius: 24px;
+      box-shadow: 0 4px 24px #d1faff;
+      width: 95%;
+      max-width: 650px;
+      margin: 28px 0;
+      padding: 32px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      border: 2px solid #ceb6fc;
     }
-    h1, h2 {
-      font-family: 'Comic Sans MS', cursive, sans-serif;
+    .cover-image {
+      width: 180px;
+      height: 240px;
+      background: linear-gradient(135deg, #fceabb 0%, #f8b500 100%);
+      border-radius: 18px;
+      border: 3px solid #ceb6fc;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ceb6fc;
+      font-size: 1.1em;
+      font-family: 'Courier New', Courier, monospace;
+      letter-spacing: 1px;
+      box-shadow: 0 2px 8px #ffd6e0;
+    }
+    .editable-title {
+      font-size: 2.1em;
+      font-weight: bold;
+      color: #9255e4;
+      margin: 12px 0 4px 0;
+      outline: none;
+      cursor: pointer;
+      border-bottom: 2px dashed #ffd6e0;
+      padding-bottom: 8px;
+      background: transparent;
+    }
+    .editable-author {
       color: #ff69b4;
-      text-shadow: 2px 2px 0 #fff2b2;
+      font-size: 1.2em;
+      margin-bottom: 15px;
+      outline: none;
+      cursor: pointer;
+      background: transparent;
+      border-bottom: 1px dotted #ffb0b6;
+      padding-bottom: 5px;
+    }
+    .section {
+      background: #fcfaff;
+      border-radius: 16px;
+      box-shadow: 0 2px 12px #cab6fc29;
+      width: 97%;
+      margin: 24px 0;
+      padding: 24px 16px 16px 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      border: 1px solid #cab6fc;
+    }
+    .editable-section-title {
+      font-size: 1.4em;
+      color: #ff69b4;
+      margin-bottom: 10px;
+      font-weight: 600;
+      outline: none;
+      cursor: pointer;
+      border-bottom: 1px dashed #cab6fc;
+      background: transparent;
+    }
+    .editable-content {
+      font-size: 1.06em;
+      color: #2e3b4e;
+      padding: 6px 0;
+      min-height: 48px;
+      outline: none;
+      background: transparent;
+      width: 100%;
     }
     .divider {
-      border-top: 3px dashed #90caf9;
-      margin: 20px 0;
-    }
-    .book-cover {
-      border: 3px solid #90caf9;
-      border-radius: 8px;
-      margin-bottom: 20px;
-      width: 200px;
-      height: 270px;
-      background: #e7ffde;
-      display: block;
-      margin-left: auto;
-      margin-right: auto;
-    }
-    .btn {
-      background: linear-gradient(90deg, #ffb6c1 0%, #87cefa 100%);
-      color: #2e3b4e;
-      border: none;
-      border-radius: 10px;
-      font-size: 16px;
-      padding: 12px 25px;
-      cursor: pointer;
-      box-shadow: 0 2px 8px #ffd6d9;
-      margin-top: 20px;
-    }
-    .btn:hover {
-      background: linear-gradient(90deg, #fff2b2 0%, #ecb3ff 100%);
+      width: 90%;
+      margin: 17px auto;
+      border-top: 2px dashed #ceb6fc;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>My Book Title</h1>
-    <div class="book-cover">
-      <!-- Placeholder: You can add an image here -->
-      <span style="margin-top: 120px; display: block; color: #90caf9;">Book Cover Placeholder</span>
+  <div class="card">
+    <div class="cover-image">Book Cover Placeholder</div>
+    <div class="editable-title" contenteditable="true">Book Title Here</div>
+    <div class="editable-author" contenteditable="true">Author Names Here</div>
+    <div class="divider"></div>
+
+    <!-- Section 1 -->
+    <div class="section">
+      <div class="editable-section-title" contenteditable="true">About the Book</div>
+      <div class="editable-content" contenteditable="true">Write something cute about your book!</div>
     </div>
-    <h2>by Your Name</h2>
-    <div class="divider"></div>
-    <h2>About the Book</h2>
-    <p>
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit. This is where you can write a cute introduction about your book!
-    </p>
-    <div class="divider"></div>
-    <h2>Favourite Characters</h2>
-    <ul style="list-style-type: square; color: #ff69b4;">
-      <li>Character One</li>
-      <li>Character Two</li>
-      <li>Character Three</li>
-    </ul>
-    <button class="btn">Read More</button>
+
+    <!-- Section 2 -->
+    <div class="section">
+      <div class="editable-section-title" contenteditable="true">Favourite Characters</div>
+      <div class="editable-content" contenteditable="true">List your character names or fun traits here!</div>
+    </div>
+
+    <!-- Section 3 -->
+    <div class="section">
+      <div class="editable-section-title" contenteditable="true">Section Name (edit me!)</div>
+      <div class="editable-content" contenteditable="true">Add anything else you'd like—you can change section title above!</div>
+    </div>
+
+    <!-- Section 4 -->
+    <div class="section">
+      <div class="editable-section-title" contenteditable="true">Section Name (edit me!)</div>
+      <div class="editable-content" contenteditable="true">Add more custom content here!</div>
+    </div>
   </div>
 </body>
 </html>
