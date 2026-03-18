@@ -1,0 +1,110 @@
+body {
+  background: #181d1b radial-gradient(circle, #232726 50%, #181d1b 100%);
+  color: #e0ffe6;
+  font-family: 'Fira Mono', 'Consolas', monospace;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+header {
+  text-align: center;
+  padding: 28px 0 8px 0;
+  background: #222b24b8;
+}
+.subtitle {
+  font-size: 1.1em;
+  color: #c3ffd0;
+  letter-spacing: 2px;
+}
+section {
+  max-width: 600px;
+  margin: 8px auto 20px auto;
+  background: #25302e99;
+  padding: 20px;
+  border-radius: 17px;
+  box-shadow: 0 2px 9px #1114;
+}
+.mystery {
+  color: #c4eceb;
+  cursor: pointer;
+  border-bottom: 1px dashed #84fff7;
+  transition: color 0.3s;
+}
+.mystery.revealed {
+  color: #fffa8b;
+  background: #383900;
+  border-bottom: none;
+  padding: 2px 6px;
+  border-radius: 7px;
+}
+#olm-shadow {
+  background: #242727;
+  height: 110px;
+  width: 250px;
+  margin: 0 auto;
+  border-radius: 65% 40% 75% 45%/60% 70% 55% 80%;
+  box-shadow: 0 0 15px 2px #7fffd4b8 inset, 0 0 35px #1f4639 inset;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background .3s;
+  position: relative;
+}
+#olm-shadow:hover {
+  background: #38433f;
+}
+#olm-glow {
+  color: #30ffe2;
+  filter: blur(1px);
+  font-size: 1.3em;
+}
+#olm-revealed {
+  margin-top: 15px;
+  animation: glowIn .8s cubic-bezier(.74,0,.86,1.36);
+}
+@keyframes glowIn {
+  from { opacity: 0; filter:blur(13px);}
+  to { opacity:1; filter:none;}
+}
+#olm-revealed img {
+  width: 150px;
+  border-radius: 30% 47% 52% 45%;
+  box-shadow: 0 4px 19px #0fe2f9;
+  margin-bottom: 9px;
+}
+.olm-message {
+  color: #fffeb3;
+  padding: 5px;
+  border-radius: 7px;
+  background: #1b1b07cc;
+  margin-bottom: 10px;
+}
+#choices-section button {
+  background: #31bba2;
+  color: #111;
+  border: none;
+  padding: 9px 20px;
+  margin: 7px;
+  border-radius: 10px;
+  font-size: 1em;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+#choices-section button:hover {
+  background: #4ce5e5;
+}
+#choice-result {
+  margin: 12px auto 0;
+  font-size: 1.2em;
+  color: #ffedaf;
+  min-height: 40px;
+}
+footer {
+  background: #211f1b;
+  color: #aecfbf7e;
+  padding: 12px 0 8px 0;
+  text-align: center;
+  font-size: 1em;
+  margin-top: 25px;
+}
