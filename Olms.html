@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Olm Mystery Adventure</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="cave-darken"></div>
+  <header>
+    <h1>Olm Mystery Adventure</h1>
+    <p class="subtitle">Enter the unknown. Will you find the legendary Olm?</p>
+  </header>
+  <section id="story-section">
+    <div id="story-text">
+      Your torchlight dances across damp limestone. Drip...drip... Echoes. <br>
+      Suddenly, a scribbled note: <span class="mystery" onclick="revealClue(this)">“Do not trust your eyes.”</span>
+    </div>
+  </section>
+  <section id="mystery-section">
+    <h2> Glimpse the Olm? </h2>
+    <div id="olm-shadow" onclick="showOlm()">
+      <!-- Mysterious shadow, reveals creature if clicked enough -->
+      <span id="olm-glow">Shadow… or something watching YOU?</span>
+    </div>
+    <div id="olm-revealed" style="display:none;">
+      <img src="mysterious-olm.png" alt="A surreal, glowing olm">
+      <div class="olm-message">You found the Olm! Or did you? It vanishes… Was it ever really there?</div>
+    </div>
+  </section>
+  <section id="choices-section">
+    <h2>Choose Your Path</h2>
+    <button onclick="path('follow')">Follow the echo</button>
+    <button onclick="path('stay')">Stay perfectly still</button>
+    <button onclick="path('draw')">Draw odd shapes in the mud</button>
+    <div id="choice-result"></div>
+  </section>
+  <footer>
+    <p>Not just another animal site. © Chloe 2026</p>
+  </footer>
+  <script src="main.js"></script>
+</body>
+</html>
