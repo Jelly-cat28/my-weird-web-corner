@@ -1,122 +1,260 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Your Book - 90s Pastel Aesthetic</title>
-  <style>
-    body {
-      background: linear-gradient(135deg, #ffd6e0 0%, #c1fdff 100%);
-      font-family: 'Montserrat', 'Comic Sans MS', cursive, sans-serif;
-      margin: 0;
-      min-height: 100vh;
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Cosmic Library of Lost Thoughts</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&display=swap');
+
+body{
+    margin:0;
+    overflow-x:hidden;
+    font-family:'Comic Neue', cursive;
+    background:linear-gradient(
+        135deg,
+        #ffd6ec,
+        #d6f7ff,
+        #fff4b8,
+        #e5d6ff
+    );
+    background-size:400% 400%;
+    animation:bgMove 15s infinite alternate;
+}
+
+@keyframes bgMove{
+    from{background-position:left;}
+    to{background-position:right;}
+}
+
+.header{
+    text-align:center;
+    padding:40px;
+}
+
+h1{
+    font-size:4em;
+    color:#ff4fa0;
+    text-shadow:4px 4px white;
+    margin-bottom:10px;
+}
+
+.subtitle{
+    font-size:1.3em;
+    color:#666;
+}
+
+.book{
+    width:700px;
+    max-width:90%;
+    margin:auto;
+    background:rgba(255,255,255,0.7);
+    backdrop-filter:blur(10px);
+    border-radius:25px;
+    padding:30px;
+    box-shadow:0 0 40px rgba(255,255,255,0.8);
+}
+
+.page{
+    background:white;
+    border-radius:20px;
+    padding:25px;
+    margin-top:20px;
+    transform:rotate(-1deg);
+}
+
+.page:nth-child(even){
+    transform:rotate(1deg);
+}
+
+button{
+    background:#ff9ed2;
+    border:none;
+    padding:15px 25px;
+    border-radius:50px;
+    font-size:1.1em;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+button:hover{
+    transform:scale(1.1) rotate(-3deg);
+}
+
+.quote{
+    margin-top:20px;
+    font-size:1.3em;
+    color:#444;
+    min-height:50px;
+}
+
+.sticker{
+    position:fixed;
+    font-size:3em;
+    pointer-events:none;
+    animation:float 8s infinite ease-in-out;
+}
+
+@keyframes float{
+    0%{transform:translateY(0px);}
+    50%{transform:translateY(-30px);}
+    100%{transform:translateY(0px);}
+}
+
+.cat{
+    position:fixed;
+    bottom:10px;
+    left:-200px;
+    font-size:80px;
+    animation:catRun 18s linear infinite;
+}
+
+@keyframes catRun{
+    0%{left:-200px;}
+    100%{left:110%;}
+}
+
+.sparkle{
+    position:fixed;
+    color:white;
+    animation:sparkle 3s linear infinite;
+    pointer-events:none;
+}
+
+@keyframes sparkle{
+    0%{
+        transform:translateY(0) scale(0);
+        opacity:1;
     }
-    .card {
-      background: #fff;
-      border-radius: 24px;
-      box-shadow: 0 4px 24px #d1faff;
-      width: 95%;
-      max-width: 650px;
-      margin: 28px 0;
-      padding: 32px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      border: 2px solid #ceb6fc;
+    100%{
+        transform:translateY(-200px) scale(2);
+        opacity:0;
     }
-    
-    .editable-title {
-      font-size: 2.1em;
-      font-weight: bold;
-      color: #9255e4;
-      margin: 12px 0 4px 0;
-      outline: none;
-      cursor: pointer;
-      border-bottom: 2px dashed #ffd6e0;
-      padding-bottom: 8px;
-      background: transparent;
-    }
-    .editable-author {
-      color: #ff69b4;
-      font-size: 1.2em;
-      margin-bottom: 15px;
-      outline: none;
-      cursor: pointer;
-      background: transparent;
-      border-bottom: 1px dotted #ffb0b6;
-      padding-bottom: 5px;
-    }
-    .section {
-      background: #fcfaff;
-      border-radius: 16px;
-      box-shadow: 0 2px 12px #cab6fc29;
-      width: 97%;
-      margin: 24px 0;
-      padding: 24px 16px 16px 16px;
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      border: 1px solid #cab6fc;
-    }
-    .editable-section-title {
-      font-size: 1.4em;
-      color: #ff69b4;
-      margin-bottom: 10px;
-      font-weight: 600;
-      outline: none;
-      cursor: pointer;
-      border-bottom: 1px dashed #cab6fc;
-      background: transparent;
-    }
-    .editable-content {
-      font-size: 1.06em;
-      color: #2e3b4e;
-      padding: 6px 0;
-      min-height: 48px;
-      outline: none;
-      background: transparent;
-      width: 100%;
-    }
-    .divider {
-      width: 90%;
-      margin: 17px auto;
-      border-top: 2px dashed #ceb6fc;
-    }
-  </style>
+}
+
+.footer{
+    text-align:center;
+    padding:40px;
+    color:#666;
+}
+
+.mystery-box{
+    margin-top:30px;
+    text-align:center;
+}
+
+.secret{
+    display:none;
+    margin-top:15px;
+    font-size:1.2em;
+    color:#ff4fa0;
+    font-weight:bold;
+}
+</style>
 </head>
+
 <body>
-  <div class="card">
-    <div class="editable-title" contenteditable="true">Book Title Here</div>
-    <div class="editable-author" contenteditable="true">Author Names Here</div>
-    <div class="divider"></div>
 
-    <!-- Section 1 -->
-    <div class="section">
-      <div class="editable-section-title" contenteditable="true">About the Book</div>
-      <div class="editable-content" contenteditable="true">Write something cute about your book!</div>
+<div class="sticker" style="top:10%;left:5%;">🦄</div>
+<div class="sticker" style="top:70%;left:90%;">🌈</div>
+<div class="sticker" style="top:25%;left:85%;">🍓</div>
+<div class="sticker" style="top:80%;left:10%;">💿</div>
+
+<div class="header">
+    <h1>📚 The Cosmic Library 📚</h1>
+    <p class="subtitle">
+        A forgotten website floating somewhere between 1998 and a dream.
+    </p>
+</div>
+
+<div class="book">
+
+    <div class="page">
+        <h2>Welcome, Traveller</h2>
+        <p>
+            You have accidentally opened a magical book.
+            Somewhere inside these pages lives a tiny wizard
+            whose only job is organizing lost thoughts.
+        </p>
     </div>
 
-    <!-- Section 2 -->
-    <div class="section">
-      <div class="editable-section-title" contenteditable="true">Favourite Characters</div>
-      <div class="editable-content" contenteditable="true">List your character names or fun traits here!</div>
+    <div class="page">
+        <h2>✨ Random Wisdom Generator ✨</h2>
+
+        <button onclick="newQuote()">
+            Open a Random Page
+        </button>
+
+        <div class="quote" id="quote">
+            Click the button to reveal forgotten wisdom...
+        </div>
     </div>
 
-    <!-- Section 3 -->
-    <div class="section">
-      <div class="editable-section-title" contenteditable="true">Section Name (edit me!)</div>
-      <div class="editable-content" contenteditable="true">Add anything else you'd like—you can change section title above!</div>
+    <div class="page mystery-box">
+        <h2>🔮 Forbidden Button 🔮</h2>
+
+        <button onclick="revealSecret()">
+            Definitely Don't Press This
+        </button>
+
+        <div class="secret" id="secret">
+            Congratulations. The moon now owes you $17.
+        </div>
     </div>
 
-    <!-- Section 4 -->
-    <div class="section">
-      <div class="editable-section-title" contenteditable="true">Section Name (edit me!)</div>
-      <div class="editable-content" contenteditable="true">Add more custom content here!</div>
-    </div>
-  </div>
+</div>
+
+<div class="footer">
+    Built using 12% HTML, 14% CSS, and 74% imagination.
+</div>
+
+<div class="cat">🐈💨</div>
+
+<script>
+const quotes = [
+    "Every sock disappears for a reason.",
+    "The moon secretly enjoys disco music.",
+    "You are currently someone's random background character.",
+    "Clouds are just sky doodles.",
+    "A dragon somewhere believes in you.",
+    "The universe occasionally forgets where it put things.",
+    "You have survived 100% of your Mondays.",
+    "Bananas are nature's boomerangs.",
+    "Every book is a portal disguised as paper.",
+    "Your future self thinks you're doing better than you think."
+];
+
+function newQuote(){
+    const random =
+        quotes[Math.floor(Math.random()*quotes.length)];
+    document.getElementById("quote").innerHTML = random;
+}
+
+function revealSecret(){
+    document.getElementById("secret").style.display = "block";
+}
+
+function createSparkle(){
+    const sparkle = document.createElement("div");
+    sparkle.classList.add("sparkle");
+
+    sparkle.innerHTML = "✦";
+
+    sparkle.style.left = Math.random()*window.innerWidth + "px";
+    sparkle.style.top = window.innerHeight + "px";
+    sparkle.style.fontSize =
+        (Math.random()*20+10) + "px";
+
+    document.body.appendChild(sparkle);
+
+    setTimeout(()=>{
+        sparkle.remove();
+    },3000);
+}
+
+setInterval(createSparkle,150);
+</script>
+
 </body>
 </html>
