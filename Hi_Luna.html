@@ -3,257 +3,250 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Cosmic Library of Lost Thoughts</title>
+
+<title>For My Favorite Human</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&display=swap');
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
 
 body{
-    margin:0;
+    font-family:'Poppins',sans-serif;
+    background:
+    radial-gradient(circle at top left,#ffd6e7,#f7d9ff),
+    radial-gradient(circle at bottom right,#d6e4ff,#ffffff);
+    min-height:100vh;
     overflow-x:hidden;
-    font-family:'Comic Neue', cursive;
-    background:linear-gradient(
-        135deg,
-        #ffd6ec,
-        #d6f7ff,
-        #fff4b8,
-        #e5d6ff
-    );
-    background-size:400% 400%;
-    animation:bgMove 15s infinite alternate;
+    color:#333;
 }
 
-@keyframes bgMove{
-    from{background-position:left;}
-    to{background-position:right;}
+.background-blur{
+    position:fixed;
+    width:500px;
+    height:500px;
+    border-radius:50%;
+    filter:blur(120px);
+    opacity:.5;
+    z-index:-1;
 }
 
-.header{
+.blur1{
+    background:#ffb6d9;
+    top:-150px;
+    left:-100px;
+}
+
+.blur2{
+    background:#cbb8ff;
+    right:-100px;
+    bottom:-100px;
+}
+
+.container{
+    max-width:900px;
+    margin:auto;
+    padding:60px 25px;
+}
+
+.hero{
     text-align:center;
-    padding:40px;
+    margin-bottom:50px;
 }
 
-h1{
-    font-size:4em;
-    color:#ff4fa0;
-    text-shadow:4px 4px white;
-    margin-bottom:10px;
+.hero h1{
+    font-size:4rem;
+    font-weight:700;
+    color:#222;
 }
 
-.subtitle{
-    font-size:1.3em;
+.hero p{
+    margin-top:10px;
+    font-size:1.2rem;
     color:#666;
 }
 
-.book{
-    width:700px;
-    max-width:90%;
-    margin:auto;
-    background:rgba(255,255,255,0.7);
-    backdrop-filter:blur(10px);
+.card{
+    background:rgba(255,255,255,.55);
+    backdrop-filter:blur(20px);
+    border:1px solid rgba(255,255,255,.4);
+    border-radius:30px;
+    padding:35px;
+    margin-bottom:25px;
+    box-shadow:
+    0 20px 50px rgba(0,0,0,.08);
+    transition:.3s;
+}
+
+.card:hover{
+    transform:translateY(-5px);
+}
+
+.card h2{
+    margin-bottom:15px;
+}
+
+.memory-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+    gap:20px;
+}
+
+.memory{
+    aspect-ratio:1;
     border-radius:25px;
-    padding:30px;
-    box-shadow:0 0 40px rgba(255,255,255,0.8);
+    background:linear-gradient(135deg,#ffe1f0,#e6dcff);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:4rem;
 }
 
-.page{
-    background:white;
-    border-radius:20px;
-    padding:25px;
-    margin-top:20px;
-    transform:rotate(-1deg);
-}
-
-.page:nth-child(even){
-    transform:rotate(1deg);
-}
-
-button{
-    background:#ff9ed2;
-    border:none;
-    padding:15px 25px;
-    border-radius:50px;
-    font-size:1.1em;
-    cursor:pointer;
-    transition:0.3s;
-}
-
-button:hover{
-    transform:scale(1.1) rotate(-3deg);
+.quote-box{
+    text-align:center;
 }
 
 .quote{
-    margin-top:20px;
-    font-size:1.3em;
-    color:#444;
-    min-height:50px;
+    font-size:1.4rem;
+    margin-bottom:20px;
+    min-height:80px;
 }
 
-.sticker{
-    position:fixed;
-    font-size:3em;
-    pointer-events:none;
-    animation:float 8s infinite ease-in-out;
-}
-
-@keyframes float{
-    0%{transform:translateY(0px);}
-    50%{transform:translateY(-30px);}
-    100%{transform:translateY(0px);}
-}
-
-.cat{
-    position:fixed;
-    bottom:10px;
-    left:-200px;
-    font-size:80px;
-    animation:catRun 18s linear infinite;
-}
-
-@keyframes catRun{
-    0%{left:-200px;}
-    100%{left:110%;}
-}
-
-.sparkle{
-    position:fixed;
+button{
+    border:none;
+    padding:12px 24px;
+    border-radius:50px;
+    cursor:pointer;
+    font-size:1rem;
+    background:#222;
     color:white;
-    animation:sparkle 3s linear infinite;
-    pointer-events:none;
+    transition:.3s;
 }
 
-@keyframes sparkle{
-    0%{
-        transform:translateY(0) scale(0);
-        opacity:1;
-    }
-    100%{
-        transform:translateY(-200px) scale(2);
-        opacity:0;
-    }
+button:hover{
+    transform:scale(1.05);
 }
 
 .footer{
     text-align:center;
-    padding:40px;
-    color:#666;
+    margin-top:40px;
+    color:#777;
 }
 
-.mystery-box{
-    margin-top:30px;
-    text-align:center;
+.floating-heart{
+    position:fixed;
+    pointer-events:none;
+    animation:floatUp 5s linear forwards;
 }
 
-.secret{
-    display:none;
-    margin-top:15px;
-    font-size:1.2em;
-    color:#ff4fa0;
-    font-weight:bold;
+@keyframes floatUp{
+    from{
+        transform:translateY(0);
+        opacity:1;
+    }
+    to{
+        transform:translateY(-250px);
+        opacity:0;
+    }
 }
+
 </style>
 </head>
-
 <body>
 
-<div class="sticker" style="top:10%;left:5%;">🦄</div>
-<div class="sticker" style="top:70%;left:90%;">🌈</div>
-<div class="sticker" style="top:25%;left:85%;">🍓</div>
-<div class="sticker" style="top:80%;left:10%;">💿</div>
+<div class="background-blur blur1"></div>
+<div class="background-blur blur2"></div>
 
-<div class="header">
-    <h1>📚 The Cosmic Library 📚</h1>
-    <p class="subtitle">
-        A forgotten website floating somewhere between 1998 and a dream.
-    </p>
-</div>
+<div class="container">
 
-<div class="book">
+    <div class="hero">
+        <h1>For [Friend's Name]</h1>
+        <p>A tiny corner of the internet made just for you ✨</p>
+    </div>
 
-    <div class="page">
-        <h2>Welcome, Traveller</h2>
+    <div class="card">
+        <h2>💜 Why You're Awesome</h2>
         <p>
-            You have accidentally opened a magical book.
-            Somewhere inside these pages lives a tiny wizard
-            whose only job is organizing lost thoughts.
+            Replace this with something personal.
+            Maybe some inside jokes, favorite memories,
+            or reasons why you appreciate them.
         </p>
     </div>
 
-    <div class="page">
-        <h2>✨ Random Wisdom Generator ✨</h2>
+    <div class="card">
+        <h2>📸 Memory Board</h2>
 
-        <button onclick="newQuote()">
-            Open a Random Page
-        </button>
+        <div class="memory-grid">
+            <div class="memory">🌸</div>
+            <div class="memory">🎧</div>
+            <div class="memory">☕</div>
+            <div class="memory">✨</div>
+        </div>
+    </div>
+
+    <div class="card quote-box">
+        <h2>Random Compliment Generator</h2>
 
         <div class="quote" id="quote">
-            Click the button to reveal forgotten wisdom...
+            Press the button :)
         </div>
-    </div>
 
-    <div class="page mystery-box">
-        <h2>🔮 Forbidden Button 🔮</h2>
-
-        <button onclick="revealSecret()">
-            Definitely Don't Press This
+        <button onclick="newQuote()">
+            Generate Compliment
         </button>
+    </div>
 
-        <div class="secret" id="secret">
-            Congratulations. The moon now owes you $17.
-        </div>
+    <div class="footer">
+        made with questionable coding skills but excellent intentions
     </div>
 
 </div>
-
-<div class="footer">
-    Built using 12% HTML, 14% CSS, and 74% imagination.
-</div>
-
-<div class="cat">🐈💨</div>
 
 <script>
+
 const quotes = [
-    "Every sock disappears for a reason.",
-    "The moon secretly enjoys disco music.",
-    "You are currently someone's random background character.",
-    "Clouds are just sky doodles.",
-    "A dragon somewhere believes in you.",
-    "The universe occasionally forgets where it put things.",
-    "You have survived 100% of your Mondays.",
-    "Bananas are nature's boomerangs.",
-    "Every book is a portal disguised as paper.",
-    "Your future self thinks you're doing better than you think."
+    "You make ordinary days feel less ordinary.",
+    "You are genuinely fun to be around.",
+    "You deserve way more credit than you give yourself.",
+    "You somehow make people feel comfortable instantly.",
+    "You're the kind of friend people remember years later.",
+    "Your laugh could probably solve global problems.",
+    "You have main-character energy.",
+    "The world is better with you in it."
 ];
 
 function newQuote(){
     const random =
         quotes[Math.floor(Math.random()*quotes.length)];
-    document.getElementById("quote").innerHTML = random;
+
+    document.getElementById("quote").textContent = random;
 }
 
-function revealSecret(){
-    document.getElementById("secret").style.display = "block";
-}
+document.addEventListener("mousemove",(e)=>{
 
-function createSparkle(){
-    const sparkle = document.createElement("div");
-    sparkle.classList.add("sparkle");
+    if(Math.random() > 0.93){
 
-    sparkle.innerHTML = "✦";
+        const heart = document.createElement("div");
 
-    sparkle.style.left = Math.random()*window.innerWidth + "px";
-    sparkle.style.top = window.innerHeight + "px";
-    sparkle.style.fontSize =
-        (Math.random()*20+10) + "px";
+        heart.innerHTML = "❤";
+        heart.className = "floating-heart";
 
-    document.body.appendChild(sparkle);
+        heart.style.left = e.clientX + "px";
+        heart.style.top = e.clientY + "px";
 
-    setTimeout(()=>{
-        sparkle.remove();
-    },3000);
-}
+        document.body.appendChild(heart);
 
-setInterval(createSparkle,150);
+        setTimeout(()=>{
+            heart.remove();
+        },5000);
+    }
+});
+
 </script>
 
 </body>
