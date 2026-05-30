@@ -4,9 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>For My Favorite Human</title>
+<title>For My Fave Human</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet">
 
 <style>
 
@@ -17,41 +17,42 @@
 }
 
 body{
-    font-family:'Poppins',sans-serif;
-    background:
-    radial-gradient(circle at top left,#ffd6e7,#f7d9ff),
-    radial-gradient(circle at bottom right,#d6e4ff,#ffffff);
+    font-family:'Inter',sans-serif;
     min-height:100vh;
+    background:
+        radial-gradient(circle at top left,#ffe5ef,transparent 40%),
+        radial-gradient(circle at bottom right,#dfe6ff,transparent 40%),
+        #faf8ff;
+    color:#222;
     overflow-x:hidden;
-    color:#333;
 }
 
-.background-blur{
+.blur{
     position:fixed;
     width:500px;
     height:500px;
     border-radius:50%;
     filter:blur(120px);
-    opacity:.5;
-    z-index:-1;
+    opacity:.35;
+    pointer-events:none;
 }
 
 .blur1{
-    background:#ffb6d9;
-    top:-150px;
-    left:-100px;
+    background:#ffb7d5;
+    top:-200px;
+    left:-200px;
 }
 
 .blur2{
-    background:#cbb8ff;
-    right:-100px;
-    bottom:-100px;
+    background:#b8c5ff;
+    bottom:-200px;
+    right:-200px;
 }
 
 .container{
-    max-width:900px;
+    width:min(900px,90%);
     margin:auto;
-    padding:60px 25px;
+    padding:80px 0;
 }
 
 .hero{
@@ -60,51 +61,52 @@ body{
 }
 
 .hero h1{
-    font-size:4rem;
+    font-size:clamp(3rem,8vw,5rem);
     font-weight:700;
-    color:#222;
+    letter-spacing:-3px;
 }
 
 .hero p{
-    margin-top:10px;
-    font-size:1.2rem;
+    margin-top:15px;
     color:#666;
+    font-size:1.1rem;
 }
 
 .card{
-    background:rgba(255,255,255,.55);
+    background:rgba(255,255,255,0.55);
     backdrop-filter:blur(20px);
-    border:1px solid rgba(255,255,255,.4);
+    border:1px solid rgba(255,255,255,0.7);
+    box-shadow:0 15px 40px rgba(0,0,0,0.08);
     border-radius:30px;
     padding:35px;
-    margin-bottom:25px;
-    box-shadow:
-    0 20px 50px rgba(0,0,0,.08);
-    transition:.3s;
+    margin:30px 0;
+    transition:.35s;
 }
 
 .card:hover{
-    transform:translateY(-5px);
+    transform:translateY(-6px);
 }
 
-.card h2{
+.tilt-left{
+    transform:rotate(-1.2deg);
+}
+
+.tilt-right{
+    transform:rotate(1deg);
+}
+
+.tilt-left:hover,
+.tilt-right:hover{
+    transform:translateY(-6px) rotate(0deg);
+}
+
+h2{
     margin-bottom:15px;
+    font-size:1.5rem;
 }
 
-.memory-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
-    gap:20px;
-}
-
-.memory{
-    aspect-ratio:1;
-    border-radius:25px;
-    background:linear-gradient(135deg,#ffe1f0,#e6dcff);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:4rem;
+p{
+    line-height:1.7;
 }
 
 .quote-box{
@@ -112,46 +114,55 @@ body{
 }
 
 .quote{
-    font-size:1.4rem;
-    margin-bottom:20px;
-    min-height:80px;
+    font-size:1.3rem;
+    line-height:1.6;
+    min-height:100px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#333;
+    padding:20px;
 }
 
 button{
     border:none;
-    padding:12px 24px;
-    border-radius:50px;
+    background:#222;
+    color:#253529;
+    padding:14px 24px;
+    border-radius:999px;
     cursor:pointer;
     font-size:1rem;
-    background:#222;
-    color:white;
-    transition:.3s;
+    transition:20s;
 }
 
 button:hover{
-    transform:scale(1.05);
+    transform:scale(15);
 }
 
-.footer{
+.signature{
     text-align:center;
-    margin-top:40px;
+    margin-top:50px;
     color:#777;
+    font-size:.95rem;
 }
 
-.floating-heart{
+.heart{
     position:fixed;
     pointer-events:none;
-    animation:floatUp 5s linear forwards;
+    font-size:14px;
+    color:#3d0c02;
+    animation:float 2s linear forwards;
 }
 
-@keyframes floatUp{
+@keyframes float{
     from{
-        transform:translateY(0);
         opacity:1;
+        transform:translateY(0) scale(1);
     }
+
     to{
-        transform:translateY(-250px);
         opacity:0;
+        transform:translateY(-60px) scale(1.6);
     }
 }
 
@@ -159,82 +170,133 @@ button:hover{
 </head>
 <body>
 
-<div class="background-blur blur1"></div>
-<div class="background-blur blur2"></div>
+<div class="blur blur1"></div>
+<div class="blur blur2"></div>
 
 <div class="container">
 
-    <div class="hero">
-        <h1>For [Friend's Name]</h1>
-        <p>A tiny corner of the internet made just for you ✨</p>
-    </div>
+    <section class="hero">
+        <h1>Hi Luna :)</h1>
+        <p>A tiny corner of the internet that exists only because you do.</p>
+    </section>
 
-    <div class="card">
-        <h2>💜 Why You're Awesome</h2>
+    <section class="card tilt-left">
+        <h2>A Quick Note</h2>
         <p>
-            Replace this with something personal.
-            Maybe some inside jokes, favorite memories,
-            or reasons why you appreciate them.
+            There isn't really a point to this page.
+            I just thought it would be nice to make
+            something for you for your (insert special occasion here)
         </p>
-    </div>
+    </section>
 
-    <div class="card">
-        <h2>📸 Memory Board</h2>
+    <section class="card tilt-right">
+        <h2>Things Worth Remembering</h2>
+        <p>
+            You are an amazing person and don't you forget it! Thank you for listening to my endless blabbering as well lol. You are an amazing friend, thank you!
+          <br><i>PS: I have made the button below a tiiiiiiiny bit annoying. <br>Just a tiny bit :)</i>
+        </p>
+    </section>
 
-        <div class="memory-grid">
-            <div class="memory">🌸</div>
-            <div class="memory">🎧</div>
-            <div class="memory">☕</div>
-            <div class="memory">✨</div>
-        </div>
-    </div>
+    <section class="card tilt-left quote-box">
 
-    <div class="card quote-box">
-        <h2>Random Compliment Generator</h2>
+        <h2>Random Truth Generator</h2>
 
-        <div class="quote" id="quote">
-            Press the button :)
+        <div id="quote" class="quote">
+            Press the button.
         </div>
 
         <button onclick="newQuote()">
-            Generate Compliment
+            Hi :)
         </button>
-    </div>
 
-    <div class="footer">
-        made with questionable coding skills but excellent intentions
-    </div>
+    </section>
 
+</div>
+
+<div class="signature">
+    Made with excessive effort and questionable decision-making.
 </div>
 
 <script>
 
 const quotes = [
-    "You make ordinary days feel less ordinary.",
-    "You are genuinely fun to be around.",
-    "You deserve way more credit than you give yourself.",
-    "You somehow make people feel comfortable instantly.",
-    "You're the kind of friend people remember years later.",
-    "Your laugh could probably solve global problems.",
-    "You have main-character energy.",
-    "The world is better with you in it."
+"Reminder: you're stuck with me now.",
+
+"I made an entire website instead of touching grass.",
+
+"Imagine being as cool as you. Couldn't be me.",
+
+"If you're reading this, the button worked. Tragic.",
+
+"This compliment was handcrafted by locally sourced stupidity.",
+
+"I was going to write something deep here but forgot.",
+
+"Congratulations on being objectively delightful.",
+
+"Please accept this coupon for one friendship.",
+
+"Error 404: Negative qualities not found.",
+  
+"Thanks for putting up with me. That's not a small task.",
+
+"Statistically, you're one of my favourite people.",
+
+"You're proof that good taste in friends exists.",
+
+"You somehow make even boring conversations entertaining.",
+
+"I would trust you with my last chicken nugget.",
+
+"Thanks for listening to my nonsense. There is a lot of it.",
+
+"You're one of the few people I can talk to for hours and somehow still have more things to say.",
+
+"Life is objectively better with you in it.",
+
+"You're cool. I have peer-reviewed this claim.",
+
+"If I made a tier list of people, you'd be embarrassingly high on it."
+  
+"Your presence has a bigger impact than you think.",
+
+"People remember how you make them feel.",
+
+"You make ordinary conversations more interesting.",
+
+"You're the kind of person people look for in a room.",
+
+"You deserve the same patience you give everyone else.",
+
+"Being yourself has gotten you this far. That's worth something.",
+
+"The people who care about you are glad you're here.",
+
+"You don't need to be extraordinary every day to matter.",
+
+"You have a habit of making things better without noticing.",
+
+"Some of your best qualities are the ones you don't even see."
+
 ];
 
 function newQuote(){
-    const random =
-        quotes[Math.floor(Math.random()*quotes.length)];
 
-    document.getElementById("quote").textContent = random;
+    const quote =
+    quotes[Math.floor(Math.random()*quotes.length)];
+
+    document.getElementById("quote").textContent = quote;
 }
 
 document.addEventListener("mousemove",(e)=>{
 
-    if(Math.random() > 0.93){
+    if(Math.random() > 0.85){
 
-        const heart = document.createElement("div");
+        const heart =
+        document.createElement("div");
 
-        heart.innerHTML = "❤";
-        heart.className = "floating-heart";
+        heart.className = "heart";
+        heart.innerHTML = "♥";
 
         heart.style.left = e.clientX + "px";
         heart.style.top = e.clientY + "px";
@@ -243,7 +305,7 @@ document.addEventListener("mousemove",(e)=>{
 
         setTimeout(()=>{
             heart.remove();
-        },5000);
+        },2000);
     }
 });
 
